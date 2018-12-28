@@ -2,8 +2,6 @@ package com.greencloud.gateway.http;
 
 import com.google.common.base.Preconditions;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
@@ -13,8 +11,6 @@ import java.io.IOException;
  * @author leejianhao
  */
 public class HttpServletRequestWrapper extends javax.servlet.http.HttpServletRequestWrapper {
-    protected static final Logger log = LoggerFactory.getLogger(HttpServletRequestWrapper.class);
-
     protected HttpServletRequest request;
 
     private byte[] body = null;

@@ -3,4 +3,27 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
          http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
+
+    <listener>
+        <listener-class>com.greencloud.gateway.servlet.StartServer</listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>AsyncZuulServlet</servlet-name>
+        <servlet-class>com.greencloud.gateway.servlet.AsyncGatewayServlet</servlet-class>
+        <async-supported>true</async-supported>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AsyncZuulServlet</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+
+    <!--<filter>
+        <filter-name>ContextLifecycleFilter</filter-name>
+        <filter-class>com.greencloud.gateway.context.ContextLifecycleFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>ContextLifecycleFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>-->
 </web-app>

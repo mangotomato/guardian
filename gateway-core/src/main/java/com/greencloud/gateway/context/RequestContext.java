@@ -265,6 +265,14 @@ public class RequestContext extends ConcurrentHashMap<String, Object> {
         return (URL) get("routeHost");
     }
 
+    public void setRouteUrl(String url) {
+        set("routeUrl", url);
+    }
+
+    public String getRouteUrl() {
+        return (String)get("routeUrl");
+    }
+
     /**
      * appends filter name and status to the filter execution history for the
      * current request
@@ -330,6 +338,22 @@ public class RequestContext extends ConcurrentHashMap<String, Object> {
      */
     public boolean getResponseGZipped() {
         return getBoolean("responseGZipped", true);
+    }
+
+    /**
+     * sets the flag errorHandled if there is an exception.
+     *
+     * @param handled
+     */
+    public void setErrorHandled(boolean handled) {
+        put("errorHandled", handled);
+    }
+
+    /**
+     * @return true if there is an exception and has been handled.
+     */
+    public boolean errorHandled() {
+        return getBoolean("errorHandled", false);
     }
 
     /**
