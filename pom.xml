@@ -56,7 +56,7 @@
         <eureka.version>1.1.26</eureka.version>
         <HikariCP.version>1.3.3</HikariCP.version>
         <mysql.version>5.1.21</mysql.version>
-        <httpclient.version>4.3.3</httpclient.version>
+        <httpclient.version>4.3.6</httpclient.version>
     </properties>
 
     <dependencyManagement>
