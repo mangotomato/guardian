@@ -56,8 +56,9 @@ public class GatewayFilterPoller {
 		public void run() {
 			while (running) {
 				try {
-					if (!pollerEnabled.get())
+					if (!pollerEnabled.get()) {
 						continue;
+					}
 					if (canary.get()) {
 						Transaction tran = Cat.getProducer().newTransaction("FilterPoller", "canary-"+ GatewayFilterDAOFactory.getCurrentType());
 						

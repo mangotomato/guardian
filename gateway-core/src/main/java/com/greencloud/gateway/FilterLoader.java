@@ -28,6 +28,7 @@ public class FilterLoader {
 
     public FilterLoader() {
         filterRegistry.put("routeFilter",  new RoutingFilter());
+        filterRegistry.put("responseFilter", new ResponseFilter());
         filterRegistry.put("sendResponseFilter", new SendResponseFilter());
         filterRegistry.put("errorResponse", new ErrorResponse());
         filterRegistry.put("mockFilter", new MockFilter());

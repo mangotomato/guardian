@@ -1,15 +1,18 @@
 package com.greencloud.gateway.filters;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.Transaction;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 import com.greencloud.gateway.GatewayFilter;
 import com.greencloud.gateway.constants.GatewayConstants;
 import com.greencloud.gateway.context.RequestContext;
+import com.greencloud.gateway.exception.GatewayException;
 import com.greencloud.gateway.util.HTTPRequestUtil;
 import com.netflix.config.DynamicIntProperty;
 import com.netflix.config.DynamicPropertyFactory;
 import io.netty.util.concurrent.DefaultThreadFactory;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.RedirectStrategy;
@@ -67,8 +70,8 @@ public class RoutingFilter extends GatewayFilter {
 
     private static final DynamicIntProperty MAX_CONNECTIONS = DynamicPropertyFactory.getInstance().getIntProperty(GatewayConstants.GATEWAY_CLIENT_MAX_CONNECTIONS, 500);
     private static final DynamicIntProperty MAX_CONNECTIONS_PER_ROUTE = DynamicPropertyFactory.getInstance().getIntProperty(GatewayConstants.GATEWAY_CLIENT_ROUTE_MAX_CONNECTIONS, 20);
-    private static final DynamicIntProperty SOCKET_TIMEOUT_MILLIS = DynamicPropertyFactory.getInstance().getIntProperty(GatewayConstants.GATEWAY_CLIENT_SOCKET_TIMEOUT_MILLIS, 20);
-    private static final DynamicIntProperty CONNECTION_TIMEOUT_MILLIS = DynamicPropertyFactory.getInstance().getIntProperty(GatewayConstants.GATEWAY_CLIENT_CONNECT_TIMEOUT_MILLIS, 20);
+    private static final DynamicIntProperty SOCKET_TIMEOUT_MILLIS = DynamicPropertyFactory.getInstance().getIntProperty(GatewayConstants.GATEWAY_CLIENT_SOCKET_TIMEOUT_MILLIS, 20000);
+    private static final DynamicIntProperty CONNECTION_TIMEOUT_MILLIS = DynamicPropertyFactory.getInstance().getIntProperty(GatewayConstants.GATEWAY_CLIENT_CONNECT_TIMEOUT_MILLIS, 20000);
 
     private static final AtomicReference<CloseableHttpClient> clientRef = new AtomicReference<>(newClient());
 
@@ -128,7 +131,7 @@ public class RoutingFilter extends GatewayFilter {
     }
 
     @Override
-    public Object run() {
+    public Object run() throws GatewayException {
         RequestContext context = RequestContext.getCurrentContext();
         HttpServletRequest request = context.getRequest();
 
@@ -139,11 +142,20 @@ public class RoutingFilter extends GatewayFilter {
         Header[] headers = buildRequestHeaders(request);
         String method = request.getMethod().toUpperCase();
 
+        Transaction tran = Cat.newTransaction("RouteFilter",
+                StringUtils.substringBefore(request.getRequestURL().toString(), "?") + "=>" + StringUtils.substringBefore(url, "?"));
+
         try {
             HttpResponse response = forward(clientRef.get(), method, url, headers, requestEntity, contentLength);
             setResponse(response);
+            tran.setStatus(Transaction.SUCCESS);
         } catch (Exception ex) {
-            throw Throwables.propagate(ex);
+            tran.setStatus(ex);
+            String errorMsg = String.format("Origin URL: %s => Target URL: %s error, cause: %s", request.getRequestURL(), url, ex.getMessage());
+            Cat.logError(errorMsg, ex);
+            throw new GatewayException("Route Error", 500, errorMsg);
+        } finally {
+            tran.complete();
         }
         return null;
     }
@@ -175,7 +187,7 @@ public class RoutingFilter extends GatewayFilter {
 
         try {
             httpUriRequest.setHeaders(headers);
-            HttpResponse response = clientRef.get().execute(httpUriRequest);
+            HttpResponse response = client.execute(httpUriRequest);
             return response;
         } finally {
             // httpclient.getConnectionManager().shutdown();
@@ -190,6 +202,9 @@ public class RoutingFilter extends GatewayFilter {
             if (name.toLowerCase().contains("accept-encoding")) {
                 return false;
             }
+        }
+        if (name.toLowerCase().contains("host")) {
+            return false;
         }
         return true;
     }
@@ -233,6 +248,11 @@ public class RoutingFilter extends GatewayFilter {
 
             if (isValidHeader(name)) {
                 headers.put(name.toLowerCase(), new BasicHeader(name, valBuilder.toString()));
+                if("X-Forwarded-For".equalsIgnoreCase(name)){
+                    headers.put("X-GW-IPADDRESS",new BasicHeader("X-GW-IPADDRESS", StringUtils.substringBefore(valBuilder.toString(), ",")));
+                }else if("User-Agent".equalsIgnoreCase(name)){
+                    headers.put("X-GW-USERAGENT",new BasicHeader("X-GW-USERAGENT", valBuilder.toString()));
+                }
             }
         }
 

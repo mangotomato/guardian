@@ -2,10 +2,16 @@ package com.greencloud.gateway.filters;
 
 import com.google.common.base.Strings;
 import com.greencloud.gateway.GatewayFilter;
+import com.greencloud.gateway.constants.GatewayConstants;
 import com.greencloud.gateway.context.RequestContext;
 import com.greencloud.gateway.exception.GatewayException;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.OutputStream;
 
 /**
  * @author leejianhao
@@ -34,32 +40,55 @@ public class ErrorResponse extends GatewayFilter {
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
         Throwable ex = ctx.getThrowable();
-        String errorCause="Gateway-Error-Unknown-Cause";
-        int responseStatusCode = 500;
+        try {
+            String errorCause = "GW-Error-Unknown-Cause";
+            int responseStatusCode = 500;
 
-        if (ex instanceof GatewayException) {
-            GatewayException gatewayException = (GatewayException) ex;
-            String cause = gatewayException.errorCause;
-            responseStatusCode = gatewayException.nStatusCode;
-            if (!Strings.isNullOrEmpty(cause)) {
-                errorCause = cause;
+            if (ex instanceof GatewayException) {
+                GatewayException gatewayException = (GatewayException) ex;
+                String cause = gatewayException.errorCause;
+                responseStatusCode = gatewayException.nStatusCode;
+                if (!Strings.isNullOrEmpty(cause)) {
+                    errorCause = cause;
+                }
+            }
+
+            RequestContext.getCurrentContext().getResponse().addHeader("X-GW-Error-Cause", "Gateway Error: " + errorCause);
+
+            if (getOverrideStatusCode()) {
+                RequestContext.getCurrentContext().setResponseStatusCode(200);
+            } else {
+                RequestContext.getCurrentContext().setResponseStatusCode(responseStatusCode);
+            }
+
+            //Don't continue
+            ctx.setSendGatewayResponse(false);
+            ctx.setResponseBody(getErrorMessage(errorCause, responseStatusCode));
+            //The error throws by post filters must output
+            tryFlushResponse(ctx);
+        } finally {
+            //ErrorResponse was handled
+            ctx.errorHandled();
+        }
+
+        return null;
+    }
+
+    void tryFlushResponse(RequestContext ctx) {
+        if (ctx.get("errorFlush") != null) {
+            try {
+                HttpServletResponse servletResponse = ctx.getResponse();
+                OutputStream outputStream = servletResponse.getOutputStream();
+                try {
+                    String body = RequestContext.getCurrentContext().getResponseBody();
+                    IOUtils.copy(new ByteArrayInputStream(body.getBytes(GatewayConstants.DEFAULT_CHARACTER_ENCODING)), outputStream);
+                } catch (Exception ignored) {
+                } finally {
+                    outputStream.flush();
+                }
+            } catch (Exception ignored) {
             }
         }
-
-        RequestContext.getCurrentContext().getResponse().addHeader("X-Gateway-Error-Cause", "Gateway Error: " + errorCause);
-
-        if (getOverrideStatusCode()) {
-            RequestContext.getCurrentContext().setResponseStatusCode(200);
-        } else {
-            RequestContext.getCurrentContext().setResponseStatusCode(responseStatusCode);
-        }
-
-        //Don't continue
-        ctx.setSendGatewayResponse(false);
-        ctx.setResponseBody(getErrorMessage(errorCause, responseStatusCode));
-        //ErrorResponse was handled
-        ctx.errorHandled();
-        return null;
     }
 
     String getErrorMessage(String errorCause, int status) {

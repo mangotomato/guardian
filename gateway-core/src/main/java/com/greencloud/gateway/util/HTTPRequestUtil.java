@@ -13,7 +13,6 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.*;
 
-
 public class HTTPRequestUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(HTTPRequestUtil.class);

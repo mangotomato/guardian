@@ -36,8 +36,9 @@ public class GatewayCallable implements Callable {
 
     @Override
     public Object call() throws Exception {
+        // catCtx初始当前线程MessageTree
         Cat.logRemoteCallServer(catCtx);
-        Transaction tran = Cat.getProducer().newTransaction("GatewayCallable", request.getRequestURL().toString());
+        Transaction tran = Cat.newTransaction("GatewayCallable", request.getRequestURL().toString());
         long start = System.currentTimeMillis();
         try {
             service(ctx.getRequest(), ctx.getResponse());
@@ -105,20 +106,56 @@ public class GatewayCallable implements Callable {
     }
 
     void preRoute() throws GatewayException {
-        gatewayRunner.preRoute();
+        Transaction tran = Cat.newTransaction("GatewayCallable", "preRoute");
+        try {
+            gatewayRunner.preRoute();
+            tran.setStatus(Transaction.SUCCESS);
+        } catch (Throwable e) {
+            tran.setStatus(e);
+            throw e;
+        } finally {
+            tran.complete();
+        }
     }
 
     void route() throws GatewayException {
-        gatewayRunner.route();
+        Transaction tran = Cat.newTransaction("GatewayCallable", "route");
+        try {
+            gatewayRunner.route();
+            tran.setStatus(Transaction.SUCCESS);
+        } catch (Throwable e) {
+            tran.setStatus(e);
+            throw e;
+        } finally {
+            tran.complete();
+        }
     }
 
     void postRoute() throws GatewayException {
-        gatewayRunner.postRoute();
+        Transaction tran = Cat.newTransaction("GatewayCallable", "postRoute");
+        try {
+            gatewayRunner.postRoute();
+            tran.setStatus(Transaction.SUCCESS);
+        } catch (Throwable e) {
+            tran.setStatus(e);
+            throw e;
+        } finally {
+            tran.complete();
+        }
     }
 
     void error(GatewayException e) {
-        RequestContext.getCurrentContext().setThrowable(e);
-        gatewayRunner.error();
+        Transaction tran = Cat.newTransaction("GatewayCallable", "errorRoute");
+        try {
+            RequestContext.getCurrentContext().setThrowable(e);
+            gatewayRunner.error();
+            tran.setStatus(Transaction.SUCCESS);
+        } catch (Throwable t) {
+            Cat.logError(t);
+        } finally {
+            tran.complete();
+            Cat.logError(e);
+        }
     }
 
     private void reportStat(RequestContext gateContext, long start) {

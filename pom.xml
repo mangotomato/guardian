@@ -29,6 +29,10 @@
             <id>unidal.releases</id>
             <url>http://unidal.org/nexus/content/repositories/releases/</url>
         </repository>
+        <repository>
+            <id>nexus</id>
+            <url>http://183.129.215.114:8801/nexus/content/repositories/unidal.releases/</url>
+        </repository>
     </repositories>
 
     <properties>
@@ -48,9 +52,10 @@
         <fastjson.version>1.2.31</fastjson.version>
         <archaius.version>0.5.11</archaius.version>
         <netflix-commons.version>0.1.1</netflix-commons.version>
-        <cat.version>3.0.0</cat.version>
+        <cat.version>2.0.0</cat.version>
         <eureka.version>1.1.26</eureka.version>
         <HikariCP.version>1.3.3</HikariCP.version>
+        <mysql.version>5.1.21</mysql.version>
         <httpclient.version>4.3.3</httpclient.version>
     </properties>
 
@@ -143,6 +148,16 @@
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
                 <version>${httpclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${HikariCP.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

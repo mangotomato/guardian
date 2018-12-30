@@ -85,7 +85,7 @@ public class AsyncGatewayServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Transaction tran = Cat.getProducer().newTransaction("AsyncGatewayServlet", req.getRequestURL().toString());
+        Transaction t = Cat.newTransaction("AsyncGatewayServlet", req.getRequestURL().toString());
         req.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
         AsyncContext asyncContext = req.startAsync();
         asyncContext.setTimeout(asyncTimeout.get());
@@ -94,14 +94,14 @@ public class AsyncGatewayServlet extends HttpServlet {
             Cat.Context ctx = new CatContext();
             Cat.logRemoteCallClient(ctx);
             poolExecutorRef.get().submit(new GatewayCallable(ctx, asyncContext, gatewayRunner, req));
-            tran.setStatus(Transaction.SUCCESS);
+            t.setStatus(Transaction.SUCCESS);
         } catch (RuntimeException e) {
             Cat.logError(e);
-            tran.setStatus(e);
+            t.setStatus(e);
             rejectedRequests.incrementAndGet();
             throw e;
         } finally {
-            tran.complete();
+            t.complete();
         }
     }
 

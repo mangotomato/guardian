@@ -1,6 +1,8 @@
 package com.greencloud.gateway.filters;
 
 import com.greencloud.gateway.GatewayFilter;
+import com.greencloud.gateway.constants.GatewayConstants;
+import com.greencloud.gateway.constants.GatewayHeaders;
 import com.greencloud.gateway.context.RequestContext;
 import com.greencloud.gateway.util.HTTPRequestUtil;
 import com.netflix.util.Pair;
@@ -76,14 +78,14 @@ public class SendResponseFilter extends GatewayFilter {
         }
 
         HttpServletResponse servletResponse = ctx.getResponse();
-        initResponse(servletResponse);
+        servletResponse.setCharacterEncoding(GatewayConstants.DEFAULT_CHARACTER_ENCODING);
 
         OutputStream outStream = servletResponse.getOutputStream();
         InputStream is = null;
         try {
             if (RequestContext.getCurrentContext().getResponseBody() != null) {
                 String body = RequestContext.getCurrentContext().getResponseBody();
-                IOUtils.copy(new ByteArrayInputStream(body.getBytes(servletResponse.getCharacterEncoding())), outStream);
+                IOUtils.copy(new ByteArrayInputStream(body.getBytes(GatewayConstants.DEFAULT_CHARACTER_ENCODING)), outStream);
                 return;
             }
             boolean isGzipRequest = HTTPRequestUtil.getInstance().isGzippedRequest(ctx.getRequest());
@@ -104,25 +106,20 @@ public class SendResponseFilter extends GatewayFilter {
                             inputStream = is;
                         }
                     }
+                } else if (ctx.getResponseGZipped() && isGzipRequest) {
+                    servletResponse.setHeader(GatewayHeaders.CONTENT_ENCODING, "gzip");
                 }
                 IOUtils.copy(inputStream, outStream);
             }
         } finally {
             try {
                 if (is != null) {
-                    is.close();
+                        is.close();
                 }
                 outStream.flush();
             } catch (IOException ignored) {
             }
         }
     }
-
-    private void initResponse(HttpServletResponse servletResponse) {
-        if (servletResponse.getCharacterEncoding() == null) {
-            servletResponse.setCharacterEncoding("UTF-8");
-        }
-    }
-
 
 }
