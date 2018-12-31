@@ -57,6 +57,7 @@
         <HikariCP.version>1.3.3</HikariCP.version>
         <mysql.version>5.1.21</mysql.version>
         <httpclient.version>4.3.6</httpclient.version>
+        <sentinel.version>1.4.0</sentinel.version>
     </properties>
 
     <dependencyManagement>
@@ -158,6 +159,26 @@
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-core</artifactId>
+                <version>${sentinel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-transport-simple-http</artifactId>
+                <version>${sentinel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-cluster-client-default</artifactId>
+                <version>${sentinel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-cluster-server-default</artifactId>
+                <version>${sentinel.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

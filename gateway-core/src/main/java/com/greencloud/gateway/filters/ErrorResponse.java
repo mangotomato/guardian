@@ -83,6 +83,7 @@ public class ErrorResponse extends GatewayFilter {
                     String body = RequestContext.getCurrentContext().getResponseBody();
                     IOUtils.copy(new ByteArrayInputStream(body.getBytes(GatewayConstants.DEFAULT_CHARACTER_ENCODING)), outputStream);
                 } catch (Exception ignored) {
+
                 } finally {
                     outputStream.flush();
                 }

@@ -3,6 +3,9 @@ package com.greencloud.gateway.constants;
 public class GatewayConstants {
 
     public static final String APPLICATION_NAME = "gateway";
+    public static final String DEPLOYMENT_APPLICATION_ID = "archaius.deployment.applicationId";
+    public static final String DEPLOYMENT_CONFIG_URL = "archaius.configurationSource.additionalUrls";
+    public static final String DEPLOYMENT_ENVIRONMENT = "archaius.deployment.environment";
 
     // filters
     public static final String GATEWAY_FILTER_PRE_PATH = "gateway.filter.pre.path";
@@ -44,11 +47,6 @@ public class GatewayConstants {
     public static final String GATEWAY_THREADPOOL_CODE_SIZE = "gateway.thread-pool.core-size";
     public static final String GATEWAY_THREADPOOL_MAX_SIZE = "gateway.thread-pool.maximum-size";
     public static final String GATEWAY_THREADPOOL_ALIVE_TIME = "gateway.thread-pool.alive-time";
-
-    // config
-    public static final String DEPLOYMENT_APPLICATION_ID = "archaius.deployment.applicationId";
-    public static final String DEPLOY_CONFIG_URL = "archaius.configurationSource.additionalUrls";
-    public static final String DEPLOY_ENVIRONMENT = "archaius.deployment.environment";
 
     // datasource
     public static final String DATA_SOURCE_CLASS_NAME = "gateway.data-source.class-name";

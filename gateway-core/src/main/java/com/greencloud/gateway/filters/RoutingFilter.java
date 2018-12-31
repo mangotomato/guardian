@@ -79,6 +79,8 @@ public class RoutingFilter extends GatewayFilter {
 
     // cleans expired connections at an interval
     static {
+        MAX_CONNECTIONS.addCallback(CLIENTLOADER);
+        MAX_CONNECTIONS_PER_ROUTE.addCallback(CLIENTLOADER);
         SOCKET_TIMEOUT_MILLIS.addCallback(CLIENTLOADER);
         CONNECTION_TIMEOUT_MILLIS.addCallback(CLIENTLOADER);
         schedule.scheduleAtFixedRate(new TimerTask() {

@@ -32,6 +32,7 @@ public class FilterLoader {
         filterRegistry.put("sendResponseFilter", new SendResponseFilter());
         filterRegistry.put("errorResponse", new ErrorResponse());
         filterRegistry.put("mockFilter", new MockFilter());
+        filterRegistry.put("sentinelFilter", new SentinelFIlter());
     }
 
     /**

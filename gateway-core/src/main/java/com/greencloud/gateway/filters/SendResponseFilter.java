@@ -51,6 +51,8 @@ public class SendResponseFilter extends GatewayFilter {
             writeResponse();
         } catch (Exception ex) {
             throw new RuntimeException(ex.getMessage());
+        } finally {
+            RequestContext.getCurrentContext().set("RouteHandled");
         }
         return null;
     }

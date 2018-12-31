@@ -21,7 +21,8 @@ public class ResponseFilter extends GatewayFilter {
 
     @Override
     public boolean shouldFilter() {
-        return RequestContext.getCurrentContext().getResponseStatusCode() != 200;
+        RequestContext context = RequestContext.getCurrentContext();
+        return context.get("RouteHandled") != null && context.getResponseStatusCode() != 200;
     }
 
     @Override
