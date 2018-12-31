@@ -41,6 +41,13 @@ public class StartServer implements ServletContextListener {
     private LogConfigurator logConfigurator;
 
     public StartServer() {
+
+        //System.setProperty(GatewayConstants.DEPLOYMENT_APPLICATION_ID, "gateway");
+        //System.setProperty(GatewayConstants.DEPLOYMENT_ENVIRONMENT, "test");
+        // https://github.com/Netflix/archaius/wiki/Getting-Started
+        // {config_server_url}/configfiles/json/{appId}/{clusterName}/{namespaceName}?ip={clientIp}
+        System.setProperty(GatewayConstants.DEPLOYMENT_CONFIG_URL, "http://localhost:8080/configfiles/gateway/default/application");
+
         String applicationID = ConfigurationManager.getConfigInstance().getString(GatewayConstants.DEPLOYMENT_APPLICATION_ID);
         if (Strings.isNullOrEmpty(applicationID)) {
             logger.warn("Using default config!");
