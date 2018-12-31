@@ -23,6 +23,8 @@ public class JDBCGatewayFilterDAOBuilder implements IGatewayFilterDAOBuilder {
 			.getIntProperty(GatewayConstants.DATA_SOURCE_MAX_POOL_SIZE, 20);
 	private static final DynamicLongProperty connectionTimeout = DynamicPropertyFactory.getInstance()
 			.getLongProperty(GatewayConstants.DATA_SOURCE_CONNECT_TIMEOUT, 1000);
+	private static final DynamicLongProperty initializationFailTimeout = DynamicPropertyFactory.getInstance()
+			.getLongProperty(GatewayConstants.DATA_SOURCE_INITIALIZATION_FAIL_TIMEOUT, 1000);
 	private static final DynamicLongProperty idleTimeout = DynamicPropertyFactory.getInstance()
 			.getLongProperty(GatewayConstants.DATA_SOURCE_IDLE_TIMEOUT, 600000);
 	private static final DynamicLongProperty maxLifetime = DynamicPropertyFactory.getInstance()
@@ -52,6 +54,9 @@ public class JDBCGatewayFilterDAOBuilder implements IGatewayFilterDAOBuilder {
 		config.setConnectionTimeout(connectionTimeout.get());
 		config.setIdleTimeout(idleTimeout.get());
 		config.setMaxLifetime(maxLifetime.get());
+		config.addDataSourceProperty("initializationFailTimeout", initializationFailTimeout.get());
+
+		config.setConnectionTestQuery("SELECT 1");
 
 		this.dataSource = new HikariDataSource(config);
 		//+ "_" + environment.get();

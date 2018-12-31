@@ -2,7 +2,6 @@ package com.greencloud.gateway.filters;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Transaction;
-import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 import com.greencloud.gateway.GatewayFilter;
 import com.greencloud.gateway.constants.GatewayConstants;

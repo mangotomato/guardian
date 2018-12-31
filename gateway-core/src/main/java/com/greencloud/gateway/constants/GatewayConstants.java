@@ -58,7 +58,7 @@ public class GatewayConstants {
     public static final String DATA_SOURCE_CONNECT_TIMEOUT = "gateway.data-source.connection-timeout";
     public static final String DATA_SOURCE_IDLE_TIMEOUT = "gateway.data-source.idle-timeout";
     public static final String DATA_SOURCE_MAX_LIFETIME = "gateway.data-source.max-lifetime";
-
+    public static final String DATA_SOURCE_INITIALIZATION_FAIL_TIMEOUT = "1000";
     // http client
     public static final String GATEWAY_CLIENT_MAX_CONNECTIONS = "gateway.client.max.connections";
     public static final String GATEWAY_CLIENT_ROUTE_MAX_CONNECTIONS = "gateway.client.route.max.connections";
