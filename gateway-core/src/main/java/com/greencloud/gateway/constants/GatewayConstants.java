@@ -35,7 +35,10 @@ public class GatewayConstants {
     public static final String GATEWAY_DEFAULT_HOST = "gateway.default.host";
     public static final String GATEWAY_HOST_SOCKET_TIMEOUT_MILLIS = "gateway.host.socket-timeout-millis";
     public static final String GATEWAY_HOST_CONNECT_TIMEOUT_MILLIS = "gateway.host.connect-timeout-millis";
+
     public static final String GATEWAY_INCLUDE_DEBUG_HEADER = "gateway.include-debug-header";
+    public static final String GATEWAY_INCLUDE_DEBUG_ROUTE_URL_HEADER = "gateway.include-route-url-header";
+
     public static final String GATEWAY_INITIAL_STREAM_BUFFER_SIZE = "gateway.initial-stream-buffer-size";
     public static final String GATEWAY_SET_CONTENT_LENGTH = "gateway.set-content-length";
     public static final String GATEWAY_DEBUGFILTERS_DISABLED = "gateway.debugFilters.disabled";
