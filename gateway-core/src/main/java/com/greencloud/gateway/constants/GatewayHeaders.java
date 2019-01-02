@@ -26,4 +26,9 @@ public class GatewayHeaders {
     public static final String X_Gw_Nonce = "X-Gw-Nonce";
     public static final String X_Gw_Signature = "X-Gw-Signature";
 
+    /** Prevent instantiation */
+    private GatewayHeaders() {
+        throw new AssertionError("Must not instantiate constant utility class");
+    }
+
 }

@@ -38,11 +38,10 @@ public class DebugHeader extends GatewayFilter {
 
     @Override
     public Object run() throws GatewayException {
-        RequestContext context = RequestContext.getCurrentContext()
+        RequestContext context = RequestContext.getCurrentContext();
         List<Pair<String, String>> headers = context.getGatewayResponseHeaders();
-        headers.add(new Pair("X_GATEWAY", GatewayConstants.APPLICATION_NAME));
-        headers.add(new Pair("CONNECTION", "KEEP_ALIVE"))
-        headers.add(new Pair("X_GATEWAY_FILTER_EXECUTION_STATUS", context.getFilterExecutionSummary().toString()))
+        headers.add(new Pair("CONNECTION", "KEEP_ALIVE"));
+        headers.add(new Pair("X_GATEWAY_FILTER_EXECUTION_STATUS", context.getFilterExecutionSummary().toString()));
         headers.add(new Pair("X_ORIGINATING_URL", getOriginatingURL()));
         if (INCLUDE_ROUTE_URL_HEADER.get()) {
             // todo route header

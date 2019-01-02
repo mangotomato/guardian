@@ -7,14 +7,14 @@ public class GatewayConstants {
     public static final String DEPLOYMENT_CONFIG_URL = "archaius.configurationSource.additionalUrls";
     public static final String DEPLOYMENT_ENVIRONMENT = "archaius.deployment.environment";
 
-    // filters
+    /** filters */
     public static final String GATEWAY_FILTER_PRE_PATH = "gateway.filter.pre.path";
     public static final String GATEWAY_FILTER_ROUTE_PATH = "gateway.filter.route.path";
     public static final String GATEWAY_FILTER_POST_PATH = "gateway.filter.post.path";
     public static final String GATEWAY_FILTER_ERROR_PATH = "gateway.filter.error.path";
     public static final String GATEWAY_FILTER_CUSTOM_PATH = "gateway.filter.custom.path";
 
-    // dynamic filters
+    /** dynamic filters */
     public static final String GATEWAY_FILTER_POLLER_ENABLED = "gateway.filter.poller.enabled";
     public static final String GATEWAY_FILTER_POLLER_INTERVAL = "gateway.filter.poller.interval";
     public static final String GATEWAY_FILTER_TABLE_NAME = "gateway.filter.table.name";
@@ -45,13 +45,13 @@ public class GatewayConstants {
     public static final String GATEWAY_DEBUG_VIP = "gateway.debug.vip";
     public static final String GATEWAY_DEBUG_HOST = "gateway.debug.host";
 
-    // async servlet
+    /** async servlet */
     public static final String GATEWAY_SERVLET_ASYNC_TIMEOUT = "gateway.servlet.async.timeout";
     public static final String GATEWAY_THREADPOOL_CODE_SIZE = "gateway.thread-pool.core-size";
     public static final String GATEWAY_THREADPOOL_MAX_SIZE = "gateway.thread-pool.maximum-size";
     public static final String GATEWAY_THREADPOOL_ALIVE_TIME = "gateway.thread-pool.alive-time";
 
-    // datasource
+    /** datasource */
     public static final String DATA_SOURCE_CLASS_NAME = "gateway.data-source.class-name";
     public static final String DATA_SOURCE_URL = "gateway.data-source.url";
     public static final String DATA_SOURCE_USER = "gateway.data-source.user";
@@ -62,7 +62,7 @@ public class GatewayConstants {
     public static final String DATA_SOURCE_IDLE_TIMEOUT = "gateway.data-source.idle-timeout";
     public static final String DATA_SOURCE_MAX_LIFETIME = "gateway.data-source.max-lifetime";
     public static final String DATA_SOURCE_INITIALIZATION_FAIL_TIMEOUT = "1000";
-    // http client
+    /** http client */
     public static final String GATEWAY_CLIENT_MAX_CONNECTIONS = "gateway.client.max.connections";
     public static final String GATEWAY_CLIENT_ROUTE_MAX_CONNECTIONS = "gateway.client.route.max.connections";
     public static final String GATEWAY_CLIENT_SOCKET_TIMEOUT_MILLIS = "gateway.client.socket.timeout.millis";
@@ -73,7 +73,7 @@ public class GatewayConstants {
 
     public static final String IGNORED_HEADERS = "ignoredHeaders";
 
-    // Prevent instantiation
+    /** Prevent instantiation */
     private GatewayConstants() {
         throw new AssertionError("Must not instantiate constant utility class");
     }
