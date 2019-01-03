@@ -5,6 +5,7 @@ import com.dianping.cat.message.Transaction;
 import com.google.common.collect.Maps;
 import com.greencloud.gateway.GatewayFilter;
 import com.greencloud.gateway.constants.GatewayConstants;
+import com.greencloud.gateway.context.Debug;
 import com.greencloud.gateway.context.RequestContext;
 import com.greencloud.gateway.exception.GatewayException;
 import com.greencloud.gateway.util.HTTPRequestUtil;
@@ -148,6 +149,10 @@ public class RoutingFilter extends GatewayFilter {
 
         try {
             HttpResponse response = forward(clientRef.get(), method, url, headers, requestEntity, contentLength);
+            Debug.addRequestDebug(String.format("GATEWAY :: %s", url));
+            Debug.addRequestDebug(String.format("GATEWAY :: Response statusLine > %s", response.getStatusLine()));
+            Debug.addRequestDebug(String.format("GATEWAY :: Response code > %s", response.getStatusLine().getStatusCode()));
+
             setResponse(response);
             tran.setStatus(Transaction.SUCCESS);
         } catch (Exception ex) {

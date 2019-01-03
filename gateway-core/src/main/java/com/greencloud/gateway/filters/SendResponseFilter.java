@@ -3,6 +3,7 @@ package com.greencloud.gateway.filters;
 import com.greencloud.gateway.GatewayFilter;
 import com.greencloud.gateway.constants.GatewayConstants;
 import com.greencloud.gateway.constants.GatewayHeaders;
+import com.greencloud.gateway.context.Debug;
 import com.greencloud.gateway.context.RequestContext;
 import com.greencloud.gateway.util.HTTPRequestUtil;
 import com.netflix.util.Pair;
@@ -63,6 +64,7 @@ public class SendResponseFilter extends GatewayFilter {
         if (responseHeaders != null) {
             for (Pair<String, String> pair : responseHeaders) {
                 ctx.getResponse().addHeader(pair.first(), pair.second());
+                Debug.addRequestDebug("OUTBOUND: <  " + pair.first() + ":" + pair.second());
             }
         }
         Long contentLength = ctx.getOriginContentLength();
