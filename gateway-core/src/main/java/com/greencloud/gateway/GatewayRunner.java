@@ -22,7 +22,6 @@ public class GatewayRunner {
     }
 
     /**
-     *
      * @param bufferRequests - whether to wrap the ServletRequest in HttpServletRequestWrapper and buffer the body.
      */
     public GatewayRunner(boolean bufferRequests) {

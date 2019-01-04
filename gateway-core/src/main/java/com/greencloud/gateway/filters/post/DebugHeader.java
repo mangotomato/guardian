@@ -1,4 +1,4 @@
-package com.greencloud.gateway.filters;
+package com.greencloud.gateway.filters.post;
 
 import com.greencloud.gateway.GatewayFilter;
 import com.greencloud.gateway.constants.GatewayConstants;

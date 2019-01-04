@@ -1,5 +1,6 @@
 package com.greencloud.gateway.util;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.greencloud.gateway.constants.GatewayConstants;
@@ -31,6 +32,29 @@ public class HTTPRequestUtil {
         return RequestContext.getCurrentContext().getRequest().getParameter(sHeaderName);
     }
 
+    public Map<String, String> getRequestHeaders() {
+        HttpServletRequest request = RequestContext.getCurrentContext().getRequest();
+
+        Map<String, String> headers = Maps.newHashMap();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        if (headerNames != null) {
+            while (headerNames.hasMoreElements()) {
+                String name = headerNames.nextElement();
+
+                final StringBuilder valBuilder = new StringBuilder();
+                for (final Enumeration vals = request.getHeaders(name); vals.hasMoreElements();) {
+                    valBuilder.append(vals.nextElement());
+                    valBuilder.append(',');
+                }
+                valBuilder.setLength(valBuilder.length() - 1);
+
+                headers.put(name, valBuilder.toString());
+            }
+        }
+        return Collections.unmodifiableMap(headers);
+
+    }
+
     public Map<String, List<String>> getRequestHeaderMap() {
         HttpServletRequest request = RequestContext.getCurrentContext().getRequest();
         Map<String, List<String>> headers = Maps.newHashMap();
@@ -51,7 +75,19 @@ public class HTTPRequestUtil {
             }
         }
         return Collections.unmodifiableMap(headers);
+    }
 
+    public Map<String, String> leaveFirstIfMultiQueryParamValue() {
+        Map<String, List<String>> queryParams = getQueryParams();
+        if (queryParams.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        Map<String, String> qParams = new HashMap<>(queryParams.size());
+        for (String key : queryParams.keySet()) {
+            qParams.put(key, queryParams.get(key).get(0));
+        }
+        return qParams;
     }
 
     public Map<String, List<String>> getQueryParams() {
@@ -66,9 +102,34 @@ public class HTTPRequestUtil {
         qp = Maps.newHashMap();
 
         if (request.getQueryString() == null) {
-            return null;
+            return Collections.emptyMap();
         }
-        StringTokenizer st = new StringTokenizer(request.getQueryString(), "&");
+        qp = queryString2Map(request.getQueryString());
+
+        RequestContext.getCurrentContext().setRequestQueryParams(qp);
+        return qp;
+    }
+
+    public Map<String, String> leaveFirstIfMultiFormParamValue(String formQueryString) {
+        if (Strings.isNullOrEmpty(formQueryString)) {
+            return Collections.emptyMap();
+        }
+
+        Map<String, List<String>> formParams = queryString2Map(formQueryString);
+        if (formParams.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        Map<String, String> fParams = Maps.newHashMapWithExpectedSize(formParams.size());
+        for (String key : formParams.keySet()) {
+            fParams.put(key, formParams.get(key).get(0));
+        }
+        return fParams;
+    }
+
+    private Map<String, List<String>> queryString2Map(String queryString) {
+        Map<String, List<String>> qp = Maps.newHashMap();
+        StringTokenizer st = new StringTokenizer(queryString, "&");
         int i;
 
         while (st.hasMoreTokens()) {
@@ -104,7 +165,7 @@ public class HTTPRequestUtil {
 
                 List<String> valueList = qp.get(name);
                 if (valueList == null) {
-                    valueList = new LinkedList<String>();
+                    valueList = new LinkedList<>();
                     qp.put(name, valueList);
                 }
 
@@ -112,8 +173,6 @@ public class HTTPRequestUtil {
 
             }
         }
-
-        RequestContext.getCurrentContext().setRequestQueryParams(qp);
         return qp;
     }
 

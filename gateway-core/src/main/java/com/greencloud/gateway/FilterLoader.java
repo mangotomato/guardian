@@ -1,6 +1,14 @@
 package com.greencloud.gateway;
 
 import com.greencloud.gateway.filters.*;
+import com.greencloud.gateway.filters.error.ErrorResponse;
+import com.greencloud.gateway.filters.post.DebugHeader;
+import com.greencloud.gateway.filters.post.ResponseFilter;
+import com.greencloud.gateway.filters.post.SendResponseFilter;
+import com.greencloud.gateway.filters.pre.AppKeyFilter;
+import com.greencloud.gateway.filters.pre.MockFilter;
+import com.greencloud.gateway.filters.pre.SentinelFilter;
+import com.greencloud.gateway.filters.route.RoutingFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +41,8 @@ public class FilterLoader {
         filterRegistry.put("debugHeader", new DebugHeader());
         filterRegistry.put("errorResponse", new ErrorResponse());
         filterRegistry.put("mockFilter", new MockFilter());
-        filterRegistry.put("sentinelFilter", new SentinelFIlter());
+        filterRegistry.put("sentinelFilter", new SentinelFilter());
+        filterRegistry.put("appKeyFilter", new AppKeyFilter());
     }
 
     /**

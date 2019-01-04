@@ -1,8 +1,8 @@
-package com.greencloud.gateway.filters;
+package com.greencloud.gateway.filters.post;
 
 import com.greencloud.gateway.GatewayFilter;
 import com.greencloud.gateway.constants.GatewayConstants;
-import com.greencloud.gateway.constants.GatewayHeaders;
+import com.greencloud.gateway.constants.HttpHeader;
 import com.greencloud.gateway.context.Debug;
 import com.greencloud.gateway.context.RequestContext;
 import com.greencloud.gateway.util.HTTPRequestUtil;
@@ -111,7 +111,7 @@ public class SendResponseFilter extends GatewayFilter {
                         }
                     }
                 } else if (ctx.getResponseGZipped() && isGzipRequest) {
-                    servletResponse.setHeader(GatewayHeaders.CONTENT_ENCODING, "gzip");
+                    servletResponse.setHeader(HttpHeader.CONTENT_ENCODING, "gzip");
                 }
                 IOUtils.copy(inputStream, outStream);
             }

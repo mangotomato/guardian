@@ -1,4 +1,4 @@
-package com.greencloud.gateway.filters;
+package com.greencloud.gateway.filters.pre;
 
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.SphU;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author leejianhao
  */
-public class SentinelFIlter extends GatewayFilter {
+public class SentinelFilter extends GatewayFilter {
     @Override
     public String filterType() {
         return "pre";
@@ -20,7 +20,7 @@ public class SentinelFIlter extends GatewayFilter {
 
     @Override
     public int filterOrder() {
-        return 1;
+        return 20;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.greencloud.gateway.filters;
+package com.greencloud.gateway.filters.error;
 
 import com.google.common.base.Strings;
 import com.greencloud.gateway.GatewayFilter;

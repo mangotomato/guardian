@@ -39,7 +39,7 @@ public class ServletInputStreamWrapper extends ServletInputStream {
 
     @Override
     public boolean isFinished() {
-        return (idx == data.length-1);
+        return (idx == data.length - 1);
     }
 
     @Override

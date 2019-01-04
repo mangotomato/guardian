@@ -1,6 +1,6 @@
 package com.greencloud.gateway.context;
 
-import com.greencloud.gateway.constants.GatewayHeaders;
+import com.greencloud.gateway.constants.HttpHeader;
 import com.greencloud.gateway.util.DeepCopy;
 import com.netflix.util.Pair;
 import org.slf4j.Logger;
@@ -418,7 +418,7 @@ public class RequestContext extends ConcurrentHashMap<String, Object> {
      */
     public Map<String, String> getGatewayRequestHeaders() {
         if (get("gatewayRequestHeaders") == null) {
-            HashMap<String, String> gatewayRequestHeaders = new HashMap<String, String>();
+            HashMap<String, String> gatewayRequestHeaders = new HashMap<>();
             putIfAbsent("gatewayRequestHeaders", gatewayRequestHeaders);
         }
         return (Map<String, String>) get("gatewayRequestHeaders");
@@ -431,7 +431,7 @@ public class RequestContext extends ConcurrentHashMap<String, Object> {
      * @param value
      */
     public void addGatewayResponseHeader(String name, String value) {
-        getGatewayResponseHeaders().add(new Pair<String, String>(name, value));
+        getGatewayResponseHeaders().add(new Pair<>(name, value));
     }
 
     /**
@@ -441,7 +441,7 @@ public class RequestContext extends ConcurrentHashMap<String, Object> {
      */
     public List<Pair<String, String>> getGatewayResponseHeaders() {
         if (get("gatewayResponseHeaders") == null) {
-            List<Pair<String, String>> gatewayRequestHeaders = new ArrayList<Pair<String, String>>();
+            List<Pair<String, String>> gatewayRequestHeaders = new ArrayList<>();
             putIfAbsent("gatewayResponseHeaders", gatewayRequestHeaders);
         }
         return (List<Pair<String, String>>) get("gatewayResponseHeaders");
@@ -454,7 +454,7 @@ public class RequestContext extends ConcurrentHashMap<String, Object> {
      */
     public List<Pair<String, String>> getOriginResponseHeaders() {
         if (get("originResponseHeaders") == null) {
-            List<Pair<String, String>> originResponseHeaders = new ArrayList<Pair<String, String>>();
+            List<Pair<String, String>> originResponseHeaders = new ArrayList<>();
             putIfAbsent("originResponseHeaders", originResponseHeaders);
         }
         return (List<Pair<String, String>>) get("originResponseHeaders");
@@ -467,7 +467,7 @@ public class RequestContext extends ConcurrentHashMap<String, Object> {
      * @param value
      */
     public void addOriginResponseHeader(String name, String value) {
-        getOriginResponseHeaders().add(new Pair<String, String>(name, value));
+        getOriginResponseHeaders().add(new Pair<>(name, value));
     }
 
     /**
@@ -521,7 +521,7 @@ public class RequestContext extends ConcurrentHashMap<String, Object> {
      * @return true is the client request can accept gzip encoding. Checks the "accept-encoding" header
      */
     public boolean isGzipRequested() {
-        final String requestEncoding = this.getRequest().getHeader(GatewayHeaders.ACCEPT_ENCODING);
+        final String requestEncoding = this.getRequest().getHeader(HttpHeader.ACCEPT_ENCODING);
         return requestEncoding != null && requestEncoding.toLowerCase().contains("gzip");
     }
 
@@ -576,6 +576,22 @@ public class RequestContext extends ConcurrentHashMap<String, Object> {
      */
     public void setRequestQueryParams(Map<String, List<String>> qp) {
         put("requestQueryParams", qp);
+    }
+
+    /**
+     * @return Map<String, List<String>>  of the request Form Parameters
+     */
+    public Map<String, List<String>> getRequestFormParams() {
+        return (Map<String, List<String>>) get("requestFormParams");
+    }
+
+    /**
+     * sets the request form params list
+     *
+     * @param fp Map<String, List<String>> fp
+     */
+    public void setRequestFormParams(Map<String, List<String>> fp) {
+        put("requestFormParams", fp);
     }
 
 }

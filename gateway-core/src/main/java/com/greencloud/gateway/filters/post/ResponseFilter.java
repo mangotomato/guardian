@@ -1,4 +1,4 @@
-package com.greencloud.gateway.filters;
+package com.greencloud.gateway.filters.post;
 
 import com.greencloud.gateway.GatewayFilter;
 import com.greencloud.gateway.context.RequestContext;
@@ -22,7 +22,7 @@ public class ResponseFilter extends GatewayFilter {
     @Override
     public boolean shouldFilter() {
         RequestContext context = RequestContext.getCurrentContext();
-        return context.get("RouteHandled") != null && context.getResponseStatusCode() != 200;
+        return (context.get("RouteHandled") != null && context.getResponseStatusCode() != 200);
     }
 
     @Override

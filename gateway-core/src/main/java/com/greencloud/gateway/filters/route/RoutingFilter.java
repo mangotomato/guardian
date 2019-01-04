@@ -1,4 +1,4 @@
-package com.greencloud.gateway.filters;
+package com.greencloud.gateway.filters.route;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Transaction;
