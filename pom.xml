@@ -59,6 +59,7 @@
         <httpclient.version>4.3.6</httpclient.version>
         <sentinel.version>1.4.0</sentinel.version>
         <junit.version>4.12</junit.version>
+        <jedis.version>2.9.0</jedis.version>
     </properties>
 
     <dependencies>
@@ -189,6 +190,11 @@
                 <groupId>com.alibaba.csp</groupId>
                 <artifactId>sentinel-cluster-server-default</artifactId>
                 <version>${sentinel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>${jedis.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

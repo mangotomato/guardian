@@ -98,5 +98,9 @@
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-cluster-server-default</artifactId>
         </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
     </dependencies>
 </project>

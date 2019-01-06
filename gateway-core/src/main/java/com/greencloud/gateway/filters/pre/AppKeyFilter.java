@@ -87,7 +87,7 @@ public class AppKeyFilter extends GatewayFilter {
         String signatureReal = SignUtil.sign(secret, method, path, headers, querys, bodys, customSignHeaders);
         String signatureExpect = request.getHeader(SystemHeader.X_GW_SIGNATURE);
         if (!signatureReal.equals(signatureExpect)) {
-            throw new GatewayException("Invalid Signature", 403, "Invalid Signature");
+            throw new GatewayException("Invalid Signature", 401, "Invalid Signature");
         }
 
     }

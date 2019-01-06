@@ -62,6 +62,23 @@ public class GatewayConstants {
     public static final String DATA_SOURCE_IDLE_TIMEOUT = "gateway.data-source.idle-timeout";
     public static final String DATA_SOURCE_MAX_LIFETIME = "gateway.data-source.max-lifetime";
     public static final String DATA_SOURCE_INITIALIZATION_FAIL_TIMEOUT = "1000";
+
+    /** redis */
+    // 操作超时时间
+    public static final String REDIS_TIMEOUT = "redis.timeout";
+    // redis url接口以";"分割多个地址
+    public static final String REDIS_JEDISPOOLCONFIG_URLS = "redis.jedisPoolConfig.urls";
+    // jedis池最大连接数总数,默认8
+    public static final String REDIS_JEDISPOOLCONFIG_MAXTOTAL = "redis.jedisPoolConfig.maxTotal";
+    // jedis池最大空闲连接数，默认8
+    public static final String redis_jedisPoolConfig_minIdle = "redis.jedisPoolConfig.minIdle";
+    // jedis池最少空闲连接数
+    public static final String redis_jedisPoolConfig_maxIdle = "redis.jedisPoolConfig.maxIdle";
+    // jedis池没有对象返回时，最大等待时间单位为毫秒
+    public static final String redis_jedisPoolConfig_maxWaitTime = "redis.jedisPoolConfig.maxWaitTime";
+    // 在borrow一个jedis实例时，是否提前进行validate操作
+    public static final String redis_jedisPoolConfig_testOnBorrow = "redis.jedisPoolConfig.testOnBorrow";
+
     /** http client */
     public static final String GATEWAY_CLIENT_MAX_CONNECTIONS = "gateway.client.max.connections";
     public static final String GATEWAY_CLIENT_ROUTE_MAX_CONNECTIONS = "gateway.client.route.max.connections";
