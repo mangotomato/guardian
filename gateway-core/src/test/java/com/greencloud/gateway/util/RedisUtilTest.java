@@ -17,4 +17,14 @@ public class RedisUtilTest {
         String val = RedisUtil.getInstance().get("test");
         System.out.println(val);
     }
+
+    @Test
+    public void setNull() {
+        RedisUtil.getInstance().setex("null", 1000, "");
+    }
+
+    @Test
+    public void o() {
+        System.out.println(System.currentTimeMillis());
+    }
 }

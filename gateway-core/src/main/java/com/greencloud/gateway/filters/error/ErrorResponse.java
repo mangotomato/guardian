@@ -18,7 +18,7 @@ import java.io.OutputStream;
  */
 public class ErrorResponse extends GatewayFilter {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ErrorResponse.class);
+    private static final Logger logger = LoggerFactory.getLogger(ErrorResponse.class);
 
     @Override
     public String filterType() {
@@ -79,15 +79,11 @@ public class ErrorResponse extends GatewayFilter {
             try {
                 HttpServletResponse servletResponse = ctx.getResponse();
                 OutputStream outputStream = servletResponse.getOutputStream();
-                try {
-                    String body = RequestContext.getCurrentContext().getResponseBody();
-                    IOUtils.copy(new ByteArrayInputStream(body.getBytes(GatewayConstants.DEFAULT_CHARACTER_ENCODING)), outputStream);
-                } catch (Exception ignored) {
-
-                } finally {
-                    outputStream.flush();
-                }
-            } catch (Exception ignored) {
+                String body = RequestContext.getCurrentContext().getResponseBody();
+                IOUtils.copy(new ByteArrayInputStream(body.getBytes(GatewayConstants.DEFAULT_CHARACTER_ENCODING)), outputStream);
+                outputStream.flush();
+            } catch (Exception e) {
+                logger.error("error to write response", e);
             }
         }
     }

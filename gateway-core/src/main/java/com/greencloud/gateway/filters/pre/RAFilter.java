@@ -2,10 +2,14 @@ package com.greencloud.gateway.filters.pre;
 
 import com.google.common.base.Strings;
 import com.greencloud.gateway.GatewayFilter;
+import com.greencloud.gateway.constants.GatewayConstants;
 import com.greencloud.gateway.constants.SystemHeader;
 import com.greencloud.gateway.context.RequestContext;
 import com.greencloud.gateway.exception.GatewayException;
 import com.greencloud.gateway.util.RedisUtil;
+import com.netflix.config.DynamicBooleanProperty;
+import com.netflix.config.DynamicIntProperty;
+import com.netflix.config.DynamicPropertyFactory;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,10 +20,14 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class RAFilter extends GatewayFilter {
 
-    private static final long TIMESTAMP_VALIDITY_MINUTES = 15;
+    private static final DynamicIntProperty TIMESTAMP_VALIDITY_MINUTES = DynamicPropertyFactory.getInstance()
+            .getIntProperty(GatewayConstants.GATEWAY_RA_TIMESTAMP_VALIDITY_MINUTES, 15);
+
+    private static final DynamicBooleanProperty RA_ENABLE = DynamicPropertyFactory.getInstance()
+            .getBooleanProperty(GatewayConstants.GATEWAY_RA_ENABLE, false);
 
     /**
-     * appKey_api_timestamp (appKey, api, timestamp唯一）
+     * appKey_api_timestamp (默认，15分钟内，appKey, api, nonce 不能重复）
      */
     private static final String UNIQUE_KEY = "%s_%s_%s";
 
@@ -45,40 +53,49 @@ public class RAFilter extends GatewayFilter {
         String timestamp = request.getHeader(SystemHeader.X_GW_TIMESTAMP);
         String nonce = request.getHeader(SystemHeader.X_GW_NONCE);
 
-        if (Strings.isNullOrEmpty(timestamp) || Strings.isNullOrEmpty(nonce)) {
-            return false;
-        }
-
         try {
             long ts = Long.parseLong(timestamp);
             long interval = Math.abs((System.currentTimeMillis() - ts) / (1000 * 60));
-            if (interval - TIMESTAMP_VALIDITY_MINUTES > 0) {
-                throw new GatewayException("Retry Attach", 403, "Retry attach, request is rejected");
+            if (interval - TIMESTAMP_VALIDITY_MINUTES.get() > 0) {
+                throw new GatewayException("Timestamp Expired", 403, "Timestamp Expired");
             }
 
             String appKey = request.getHeader(SystemHeader.X_GW_KEY);
             String api = request.getRequestURI();
-            String key = getKey(appKey, api, ts);
+            String key = getKey(appKey, api, nonce);
             if (exists(key)) {
-                throw new GatewayException("Retry Attach", 403, "Retry attach, request is rejected");
+                throw new GatewayException("Nonce Used", 403, "Nonce Used");
             }
 
+            save(key);
+
         } catch (NumberFormatException nfe) {
-            throw new GatewayException("Retry Attach", 403, "The header x-gw-timestamp is illegal");
+            throw new GatewayException("Invalid Timestamp", 403, "Invalid Timestamp");
         }
 
         return null;
     }
 
-    private String getKey(String appKey, String api, long timestamp) {
-        return String.format(UNIQUE_KEY, appKey, api, timestamp);
+    private void save(String key) {
+        RedisUtil.getInstance().setex(key, TIMESTAMP_VALIDITY_MINUTES.get() * 60*1000, "");
+    }
+
+    private String getKey(String appKey, String api, String nonce) {
+        return String.format(UNIQUE_KEY, appKey, api, nonce);
     }
 
     private boolean exists(String key) {
-        return RedisUtil.getInstance().get(key) != null;
+        return RedisUtil.getInstance().exists(key);
     }
 
     private boolean rAEnabled() {
-        return true;
+        HttpServletRequest request = RequestContext.getCurrentContext().getRequest();
+        String appKey = request.getHeader(SystemHeader.X_GW_KEY);
+        String timestamp = request.getHeader(SystemHeader.X_GW_TIMESTAMP);
+        String nonce = request.getHeader(SystemHeader.X_GW_NONCE);
+
+        return (RA_ENABLE.get() && !Strings.isNullOrEmpty(appKey) && !Strings.isNullOrEmpty(timestamp)
+                && !Strings.isNullOrEmpty(nonce));
     }
+
 }

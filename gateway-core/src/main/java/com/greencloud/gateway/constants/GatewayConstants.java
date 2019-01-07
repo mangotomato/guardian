@@ -85,6 +85,10 @@ public class GatewayConstants {
     public static final String GATEWAY_CLIENT_SOCKET_TIMEOUT_MILLIS = "gateway.client.socket.timeout.millis";
     public static final String GATEWAY_CLIENT_CONNECT_TIMEOUT_MILLIS = "gateway.client.connect.timeout.millis";
 
+    /** filters */
+    public static final String GATEWAY_RA_ENABLE = "gateway.ra.enable";
+    public static final String GATEWAY_RA_TIMESTAMP_VALIDITY_MINUTES = "ra.timestamp_validity_minutes";
+
     public static final String DEFAULT_CONTENT_TYPE = "application/json";
     public static final String DEFAULT_CHARACTER_ENCODING = "UTF-8";
 

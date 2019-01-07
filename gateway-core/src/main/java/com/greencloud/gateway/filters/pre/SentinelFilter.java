@@ -45,7 +45,7 @@ public class SentinelFilter extends GatewayFilter {
         } catch (BlockException e1) {
             // 资源访问阻止，被限流或被降级
             // 进行相应的处理操作
-            throw new GatewayException("flow control enable", 500, "Too frequent visits， please try again later");
+            throw new GatewayException("Throttled by API Flow Control", 403, "Too frequent visits， please try again later");
         } finally {
             if (entry != null) {
                 entry.exit();

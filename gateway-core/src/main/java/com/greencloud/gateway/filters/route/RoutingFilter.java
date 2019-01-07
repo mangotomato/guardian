@@ -254,10 +254,10 @@ public class RoutingFilter extends GatewayFilter {
 
             if (isValidHeader(name)) {
                 headers.put(name.toLowerCase(), new BasicHeader(name, valBuilder.toString()));
-                if("X-Forwarded-For".equalsIgnoreCase(name)){
-                    headers.put("X-GW-IPADDRESS",new BasicHeader("X-GW-IPADDRESS", StringUtils.substringBefore(valBuilder.toString(), ",")));
-                }else if("User-Agent".equalsIgnoreCase(name)){
-                    headers.put("X-GW-USERAGENT",new BasicHeader("X-GW-USERAGENT", valBuilder.toString()));
+                if ("X-Forwarded-For".equalsIgnoreCase(name)) {
+                    headers.put("X-GW-IPADDRESS", new BasicHeader("X-GW-IPADDRESS", StringUtils.substringBefore(valBuilder.toString(), ",")));
+                } else if ("User-Agent".equalsIgnoreCase(name)) {
+                    headers.put("X-GW-USERAGENT", new BasicHeader("X-GW-USERAGENT", valBuilder.toString()));
                 }
             }
         }

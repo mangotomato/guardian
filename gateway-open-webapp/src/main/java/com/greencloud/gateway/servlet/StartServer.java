@@ -10,10 +10,7 @@ import com.greencloud.gateway.groovy.GroovyCompiler;
 import com.greencloud.gateway.groovy.GroovyFileFilter;
 import com.greencloud.gateway.scriptManage.GatewayFilterPoller;
 import com.greencloud.gateway.util.IPUtil;
-import com.netflix.appinfo.ApplicationInfoManager;
-import com.netflix.appinfo.EurekaInstanceConfig;
-import com.netflix.appinfo.HealthCheckCallback;
-import com.netflix.appinfo.PropertiesInstanceConfig;
+import com.netflix.appinfo.*;
 import com.netflix.config.ConfigurationManager;
 import com.netflix.config.DynamicBooleanProperty;
 import com.netflix.config.DynamicPropertyFactory;
@@ -21,12 +18,15 @@ import com.netflix.config.DynamicStringProperty;
 import com.netflix.discovery.DefaultEurekaClientConfig;
 import com.netflix.discovery.DiscoveryManager;
 import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Map;
 
 /**
@@ -40,13 +40,25 @@ public class StartServer implements ServletContextListener {
 
     private LogConfigurator logConfigurator;
 
+    private static final String[] namespaces = {"application", "httpclient", "redis", "eureka"};
     public StartServer() {
 
         //System.setProperty(GatewayConstants.DEPLOYMENT_APPLICATION_ID, "gateway");
         //System.setProperty(GatewayConstants.DEPLOYMENT_ENVIRONMENT, "test");
         // https://github.com/Netflix/archaius/wiki/Getting-Started
         // {config_server_url}/configfiles/json/{appId}/{clusterName}/{namespaceName}?ip={clientIp}
-        System.setProperty(GatewayConstants.DEPLOYMENT_CONFIG_URL, "http://localhost:8080/configfiles/gateway/default/application");
+        String configServer = System.getProperty("configServer");
+        if (Strings.isNullOrEmpty(configServer)) {
+            configServer = "http://localhost:8080";
+        }
+
+        StringBuilder configUrls = new StringBuilder();
+        for (String namespace : namespaces) {
+            configUrls.append(configServer+"/configfiles/gateway/default/"+namespace+",");
+        }
+        String configUrlConcat = StringUtils.removeEnd(configUrls.toString(), ",");
+
+        System.setProperty(GatewayConstants.DEPLOYMENT_CONFIG_URL, configUrlConcat);
 
         String applicationID = ConfigurationManager.getConfigInstance().getString(GatewayConstants.DEPLOYMENT_APPLICATION_ID);
         if (Strings.isNullOrEmpty(applicationID)) {
@@ -66,15 +78,15 @@ public class StartServer implements ServletContextListener {
         try {
             //initInfoBoard();
             //initMonitor();
-            initZuul();
-            //updateInstanceStatusToEureka();
+            initGateway();
+            updateInstanceStatusToEureka();
         } catch (Exception e) {
             logger.error("Error while initializing zuul gateway.", e);
             throw new RuntimeException(e);
         }
     }
 
-    private void initZuul() throws Exception {
+    private void initGateway() throws Exception {
         logger.info("Starting Groovy Filter file manager");
         final AbstractConfiguration config = ConfigurationManager.getConfigInstance();
         final String preFiltersPath = config.getString(GatewayConstants.GATEWAY_FILTER_PRE_PATH);
@@ -94,6 +106,14 @@ public class StartServer implements ServletContextListener {
         //load filters in DB
         startZuulFilterPoller();
         logger.info("Groovy Filter file manager started");
+    }
+
+    private void updateInstanceStatusToEureka() {
+        DynamicBooleanProperty eurekaEnabled = DynamicPropertyFactory.getInstance().getBooleanProperty("eureka.enabled", true);
+        if (!eurekaEnabled.get()) {
+            return;
+        }
+        ApplicationInfoManager.getInstance().setInstanceStatus(InstanceInfo.InstanceStatus.UP);
     }
 
     private void startZuulFilterPoller() {
@@ -132,7 +152,17 @@ public class StartServer implements ServletContextListener {
             return;
         }
 
-        EurekaInstanceConfig eurekaInstanceConfig = new PropertiesInstanceConfig() {};
+        EurekaInstanceConfig eurekaInstanceConfig = new PropertiesInstanceConfig() {
+            @Override
+            public String getHostName(boolean refresh) {
+                try {
+
+                    return InetAddress.getLocalHost().getHostAddress();
+                } catch (UnknownHostException e) {
+                    return super.getHostName(refresh);
+                }
+            }
+        };
         // ConfigurationManager.getConfigInstance().setProperty("eureka.statusPageUrl","http://"+ getTurbineInstance());
 
         DiscoveryManager.getInstance().initComponent(eurekaInstanceConfig, new DefaultEurekaClientConfig());

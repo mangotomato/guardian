@@ -54,7 +54,7 @@ public class JDBCGatewayFilterDAOBuilder implements IGatewayFilterDAOBuilder {
 		config.setConnectionTimeout(connectionTimeout.get());
 		config.setIdleTimeout(idleTimeout.get());
 		config.setMaxLifetime(maxLifetime.get());
-		config.addDataSourceProperty("initializationFailTimeout", initializationFailTimeout.get());
+		//config.addDataSourceProperty("initializationFailTimeout", initializationFailTimeout.get());
 
 		config.setConnectionTestQuery("SELECT 1");
 

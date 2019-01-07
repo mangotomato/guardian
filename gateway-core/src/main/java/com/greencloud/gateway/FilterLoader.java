@@ -7,6 +7,7 @@ import com.greencloud.gateway.filters.post.ResponseFilter;
 import com.greencloud.gateway.filters.post.SendResponseFilter;
 import com.greencloud.gateway.filters.pre.AppKeyFilter;
 import com.greencloud.gateway.filters.pre.MockFilter;
+import com.greencloud.gateway.filters.pre.RAFilter;
 import com.greencloud.gateway.filters.pre.SentinelFilter;
 import com.greencloud.gateway.filters.route.RoutingFilter;
 import org.slf4j.Logger;
@@ -43,6 +44,7 @@ public class FilterLoader {
         filterRegistry.put("mockFilter", new MockFilter());
         filterRegistry.put("sentinelFilter", new SentinelFilter());
         filterRegistry.put("appKeyFilter", new AppKeyFilter());
+        filterRegistry.put("raFilter", new RAFilter());
     }
 
     /**

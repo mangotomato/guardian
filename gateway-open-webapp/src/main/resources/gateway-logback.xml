@@ -28,8 +28,10 @@
         </encoder>
     </appender>
 
-	<root>
-		<level value="INFO" />
+    <logger name="com.greencloud.gateway" level="DEBUG" />
+
+    <root>
+		<level value="debug" />
 		<appender-ref ref="stdout" />
 		<!--<appender-ref ref="ROLLING" />-->
 	</root>

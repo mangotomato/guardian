@@ -5,6 +5,8 @@ import com.greencloud.gateway.constants.HttpHeader;
 import com.greencloud.gateway.constants.SystemHeader;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -15,6 +17,7 @@ import java.util.*;
  */
 public class SignUtil {
 
+    private static final Logger logger = LoggerFactory.getLogger(SignUtil.class);
     /**
      * @param secret               AppKey
      * @param method               {@link com.greencloud.gateway.constants.HttpMethod}
@@ -85,6 +88,8 @@ public class SignUtil {
         sb.append(Constants.LF);
         sb.append(buildHeaders(headers, signHeaderPrefixList));
         sb.append(buildResource(path, querys, bodys));
+
+        logger.debug("stringToSign: \n" + sb.toString());
         return sb.toString();
     }
 

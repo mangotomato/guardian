@@ -1,5 +1,7 @@
 package com.greencloud.gateway;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.Transaction;
 import com.greencloud.gateway.context.Debug;
 import com.greencloud.gateway.context.RequestContext;
 import com.greencloud.gateway.exception.GatewayException;
@@ -101,10 +103,20 @@ public class FilterProcessor {
         List<GatewayFilter> list = FilterLoader.getInstance().getFiltersByType(sType);
         if (list != null) {
             for (int i = 0; i < list.size(); i++) {
-                GatewayFilter GatewayFilter = list.get(i);
-                Object result = processGatewayFilter(GatewayFilter);
-                if (result != null && result instanceof Boolean) {
-                    bResult |= ((Boolean) result);
+                GatewayFilter gatewayFilter = list.get(i);
+                Transaction tran = Cat.newTransaction("GatewayCallable", sType + ":" + gatewayFilter.getClass().getSimpleName());
+
+                try {
+                    Object result = processGatewayFilter(gatewayFilter);
+                    if (result != null && result instanceof Boolean) {
+                        bResult |= ((Boolean) result);
+                    }
+                    tran.setStatus(Transaction.SUCCESS);
+                } catch (Throwable e) {
+                    tran.setStatus(e);
+                    throw e;
+                } finally {
+                    tran.complete();
                 }
             }
         }

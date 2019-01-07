@@ -89,64 +89,158 @@ public class RedisUtil {
         return jedis;
     }
 
+    /**
+     * 实现jedis连接的获取和释放，具体的redis业务逻辑由executor实现
+     *
+     * @param executor RedisExecutor接口的实现类
+     * @return
+     */
+    public <T> T execute(String key, HashRedisExecutor<T> executor) {
+        Jedis jedis = getJedis(key);
+        T result = null;
+        try {
+            result = executor.execute(jedis);
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return result;
+    }
+
     public String set(final String key, final String value) {
-        return getJedis(key).set(key, value);
+        return execute(key, new HashRedisExecutor<String>() {
+            @Override
+            public String execute(Jedis jedis) {
+                return jedis.set(key, value);
+            }
+        });
     }
 
     public String set(final String key, final String value, final String nxxx, final String expx, final long time) {
-        return getJedis(key).set(key, value, nxxx, expx, time);
+        return execute(key, new HashRedisExecutor<String>() {
+            @Override
+            public String execute(Jedis jedis) {
+                return jedis.set(key, value, nxxx, expx, time);
+            }
+        });
     }
 
     public String get(final String key) {
-        return getJedis(key).get(key);
+        return execute(key, new HashRedisExecutor<String>() {
+            @Override
+            public String execute(Jedis jedis) {
+                return jedis.get(key);
+            }
+        });
     }
 
     public Boolean exists(final String key) {
-        return getJedis(key).exists(key);
+        return execute(key, new HashRedisExecutor<Boolean>() {
+            @Override
+            public Boolean execute(Jedis jedis) {
+                return jedis.exists(key);
+            }
+        });
     }
 
     public Long setnx(final String key, final String value) {
-        return getJedis(key).setnx(key, value);
+        return execute(key, new HashRedisExecutor<Long>() {
+            @Override
+            public Long execute(Jedis jedis) {
+                return jedis.setnx(key, value);
+            }
+        });
     }
 
     public String setex(final String key, final int seconds, final String value) {
-        return getJedis(key).setex(key, seconds, value);
+        return execute(key, new HashRedisExecutor<String>() {
+            @Override
+            public String execute(Jedis jedis) {
+                return jedis.setex(key, seconds, value);
+            }
+        });
     }
 
     public Long expire(final String key, final int seconds) {
-        return getJedis(key).expire(key, seconds);
+        return execute(key, new HashRedisExecutor<Long>() {
+            @Override
+            public Long execute(Jedis jedis) {
+                return jedis.expire(key, seconds);
+            }
+        });
     }
 
     public Long incr(final String key) {
-        return getJedis(key).incr(key);
+        return execute(key, new HashRedisExecutor<Long>() {
+            @Override
+            public Long execute(Jedis jedis) {
+                return jedis.incr(key);
+            }
+        });
     }
 
     public Long decr(final String key) {
-        return getJedis(key).decr(key);
+        return execute(key, new HashRedisExecutor<Long>() {
+            @Override
+            public Long execute(Jedis jedis) {
+                return jedis.decr(key);
+            }
+        });
     }
 
     public Long hset(final String key, final String field, final String value) {
-        return getJedis(key).hset(key, field, value);
+        return execute(key, new HashRedisExecutor<Long>() {
+            @Override
+            public Long execute(Jedis jedis) {
+                return jedis.hset(key, field, value);
+            }
+        });
     }
 
     public String hget(final String key, final String field) {
-        return getJedis(key).hget(key, field);
+        return execute(key, new HashRedisExecutor<String>() {
+            @Override
+            public String execute(Jedis jedis) {
+                return jedis.hget(key, field);
+            }
+        });
     }
 
     public String hmset(final String key, final Map<String, String> hash) {
-        return getJedis(key).hmset(key, hash);
+        return execute(key, new HashRedisExecutor<String>() {
+            @Override
+            public String execute(Jedis jedis) {
+                return jedis.hmset(key, hash);
+            }
+        });
     }
 
     public List<String> hmget(final String key, final String... fields) {
-        return getJedis(key).hmget(key, fields);
+        return execute(key, new HashRedisExecutor<List<String>>() {
+            @Override
+            public List<String> execute(Jedis jedis) {
+                return jedis.hmget(key, fields);
+            }
+        });
     }
 
     public Long del(final String key) {
-        return getJedis(key).del(key);
+        return execute(key, new HashRedisExecutor<Long>() {
+            @Override
+            public Long execute(Jedis jedis) {
+                return jedis.del(key);
+            }
+        });
     }
 
     public Map<String, String> hgetAll(final String key) {
-        return getJedis(key).hgetAll(key);
+        return execute(key, new HashRedisExecutor<Map<String, String>>() {
+            @Override
+            public Map<String, String> execute(Jedis jedis) {
+                return jedis.hgetAll(key);
+            }
+        });
     }
 
     public void destroy() {
@@ -154,6 +248,11 @@ public class RedisUtil {
         for (int i = 0; i < jedisPools.length; i++) {
             jedisPools[i].close();
         }
+    }
+
+    // redis具体逻辑接口
+    public interface HashRedisExecutor<T> {
+        T execute(Jedis jedis);
     }
 
 }
