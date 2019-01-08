@@ -18,7 +18,7 @@ public interface IGatewayFilterDAO {
      * @param filterId
      * @return returns all filter revisions for the given filterId
      */
-    List<FilterInfo> getZuulFilters(String filterId) throws Exception;
+    List<FilterInfo> getGatewayFilters(String filterId) throws Exception;
 
     /**
      *

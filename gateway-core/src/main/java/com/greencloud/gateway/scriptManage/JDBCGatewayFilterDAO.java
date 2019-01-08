@@ -60,7 +60,7 @@ public class JDBCGatewayFilterDAO implements IGatewayFilterDAO {
 	}
 
 	@Override
-	public List<FilterInfo> getZuulFilters(String filterId) throws Exception {
+	public List<FilterInfo> getGatewayFilters(String filterId) throws Exception {
 
 		Connection connection = dataSource.getConnection();
 		PreparedStatement ps = null;

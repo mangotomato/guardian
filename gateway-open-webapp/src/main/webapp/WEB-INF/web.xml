@@ -18,6 +18,24 @@
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>scriptManager</servlet-name>
+        <servlet-class>com.greencloud.gateway.scriptManage.FilterScriptManagerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>scriptManager</servlet-name>
+        <url-pattern>/admin/scriptmanager</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>filterLoader</servlet-name>
+        <jsp-file>/admin/filterLoader.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>filterLoader</servlet-name>
+        <url-pattern>/admin/filterLoader.jsp</url-pattern>
+    </servlet-mapping>
+
     <!--<filter>
         <filter-name>ContextLifecycleFilter</filter-name>
         <filter-class>com.greencloud.gateway.context.ContextLifecycleFilter</filter-class>

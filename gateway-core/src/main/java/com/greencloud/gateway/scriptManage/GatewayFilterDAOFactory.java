@@ -16,7 +16,7 @@ public class GatewayFilterDAOFactory {
 
     }
 
-    public static IGatewayFilterDAO getZuulFilterDAO() {
+    public static IGatewayFilterDAO getGatewayFilterDAO() {
         IGatewayFilterDAO dao = daoCache.get(daoType.get());
 
         if (dao != null) {

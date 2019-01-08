@@ -65,7 +65,7 @@ public class GatewayFilterPoller {
 						try{
 							Map<String, FilterInfo> filterSet = Maps.newHashMap();
 	
-							List<FilterInfo> activeScripts = GatewayFilterDAOFactory.getZuulFilterDAO().getAllActiveFilters();
+							List<FilterInfo> activeScripts = GatewayFilterDAOFactory.getGatewayFilterDAO().getAllActiveFilters();
 	
 							if (!activeScripts.isEmpty()) {
 								for (FilterInfo filterInfo : activeScripts) {
@@ -73,7 +73,7 @@ public class GatewayFilterPoller {
 								}
 							}
 	
-							List<FilterInfo> canaryScripts = GatewayFilterDAOFactory.getZuulFilterDAO().getAllCanaryFilters();
+							List<FilterInfo> canaryScripts = GatewayFilterDAOFactory.getGatewayFilterDAO().getAllCanaryFilters();
 							if (!canaryScripts.isEmpty()) {
 								for (FilterInfo filterInfo : canaryScripts) {
 									filterSet.put(filterInfo.getFilterId(), filterInfo);
@@ -94,7 +94,7 @@ public class GatewayFilterPoller {
 						Transaction tran = Cat.newTransaction("FilterPoller", "active-"+ GatewayFilterDAOFactory.getCurrentType());
 						
 						try{
-							List<FilterInfo> newFilters = GatewayFilterDAOFactory.getZuulFilterDAO().getAllActiveFilters();
+							List<FilterInfo> newFilters = GatewayFilterDAOFactory.getGatewayFilterDAO().getAllActiveFilters();
 							
 							tran.setStatus(Transaction.SUCCESS);
 							if (newFilters.isEmpty()) {

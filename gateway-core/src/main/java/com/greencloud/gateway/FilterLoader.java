@@ -35,14 +35,14 @@ public class FilterLoader {
     static IFilterFactory FILTER_FACTORY = new DefaultFilterFactory();
 
     public FilterLoader() {
-        filterRegistry.put("routeFilter", new RoutingFilter());
-        filterRegistry.put("responseFilter", new ResponseFilter());
-        filterRegistry.put("sendResponseFilter", new SendResponseFilter());
-        filterRegistry.put("errorResponse", new ErrorResponse());
-        filterRegistry.put("mockFilter", new MockFilter());
-        filterRegistry.put("sentinelFilter", new SentinelFilter());
-        filterRegistry.put("appKeyFilter", new AppKeyFilter());
-        filterRegistry.put("raFilter", new RAFilter());
+//        filterRegistry.put("routeFilter", new RoutingFilter());
+//        filterRegistry.put("responseFilter", new ResponseFilter());
+//        filterRegistry.put("sendResponseFilter", new SendResponseFilter());
+//        filterRegistry.put("errorResponse", new ErrorResponse());
+//        filterRegistry.put("mockFilter", new MockFilter());
+//        filterRegistry.put("sentinelFilter", new SentinelFilter());
+//        filterRegistry.put("appKeyFilter", new AppKeyFilter());
+//        filterRegistry.put("raFilter", new RAFilter());
     }
 
     /**

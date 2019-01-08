@@ -89,7 +89,7 @@ public class HttpGatewayFilterDAO implements IGatewayFilterDAO {
     }
 
     @Override
-    public List<FilterInfo> getZuulFilters(String filterId) throws Exception {
+    public List<FilterInfo> getGatewayFilters(String filterId) throws Exception {
         return null;
     }
 
