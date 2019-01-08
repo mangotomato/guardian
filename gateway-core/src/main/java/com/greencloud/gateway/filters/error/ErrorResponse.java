@@ -14,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.OutputStream;
 
 /**
+ *
  * @author leejianhao
  */
 public class ErrorResponse extends GatewayFilter {

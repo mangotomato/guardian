@@ -1,5 +1,7 @@
 package com.greencloud.gateway.util;
 
+import static com.greencloud.gateway.constants.GatewayConstants.*;
+
 import com.netflix.config.DynamicBooleanProperty;
 import com.netflix.config.DynamicIntProperty;
 import com.netflix.config.DynamicPropertyFactory;
@@ -37,13 +39,13 @@ public class RedisUtil {
 
     private AtomicReference<JedisPool[]> jedisPoolsRef = new AtomicReference<>();
 
-    private static final DynamicIntProperty JEDISPOOLCONFIG_TIMEOUT = DynamicPropertyFactory.getInstance().getIntProperty("redis.timeout", 2000);
-    private static final DynamicStringProperty JEDISPOOLCONFIG_URLS = DynamicPropertyFactory.getInstance().getStringProperty("redis.jedisPoolConfig.urls", "localhost:6379");
-    private static final DynamicIntProperty JEDISPOOLCONFIG_MAXTOTAL = DynamicPropertyFactory.getInstance().getIntProperty("redis.jedisPoolConfig.maxTotal", 8);
-    private static final DynamicIntProperty JEDISPOOLCONFIG_MAXIDLE = DynamicPropertyFactory.getInstance().getIntProperty("redis.jedisPoolConfig.maxIdle", 8);
-    private static final DynamicIntProperty JEDISPOOLCONFIG_MINIDLE = DynamicPropertyFactory.getInstance().getIntProperty("redis.jedisPoolConfig.minIdle", 0);
-    private static final DynamicIntProperty JEDISPOOLCONFIG_MAXWAITTIME = DynamicPropertyFactory.getInstance().getIntProperty("redis.jedisPoolConfig.maxWaitTime", -1);
-    private static final DynamicBooleanProperty JEDISPOOLCONFIG_TESTONBORROW = DynamicPropertyFactory.getInstance().getBooleanProperty("redis.jedisPoolConfig.testOnBorrow", true);
+    private static final DynamicIntProperty JEDISPOOLCONFIG_TIMEOUT = DynamicPropertyFactory.getInstance().getIntProperty(REDIS_TIMEOUT, 2000);
+    private static final DynamicStringProperty JEDISPOOLCONFIG_URLS = DynamicPropertyFactory.getInstance().getStringProperty(REDIS_JEDISPOOLCONFIG_URLS, "localhost:6379");
+    private static final DynamicIntProperty JEDISPOOLCONFIG_MAXTOTAL = DynamicPropertyFactory.getInstance().getIntProperty(REDIS_JEDISPOOLCONFIG_MAXTOTAL, 8);
+    private static final DynamicIntProperty JEDISPOOLCONFIG_MAXIDLE = DynamicPropertyFactory.getInstance().getIntProperty(REDIS_JEDISPOOLCONFIG_MAXIDLE, 8);
+    private static final DynamicIntProperty JEDISPOOLCONFIG_MINIDLE = DynamicPropertyFactory.getInstance().getIntProperty(REDIS_JEDISPOOLCONFIG_MINIDLE, 0);
+    private static final DynamicIntProperty JEDISPOOLCONFIG_MAXWAITTIME = DynamicPropertyFactory.getInstance().getIntProperty(REDIS_JEDISPOOLCONFIG_MAXWAITTIME, -1);
+    private static final DynamicBooleanProperty JEDISPOOLCONFIG_TESTONBORROW = DynamicPropertyFactory.getInstance().getBooleanProperty(REDIS_JEDISPOOLCONFIG_TESTONBORROW, true);
 
     private static final RedisUtil INSTANCE = new RedisUtil();
 

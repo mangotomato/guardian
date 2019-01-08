@@ -91,7 +91,7 @@ public class GatewayFilterPoller {
 							tran.complete();
 						}
 					} else if (active.get()) {
-						Transaction tran = Cat.getProducer().newTransaction("FilterPoller", "active-"+ GatewayFilterDAOFactory.getCurrentType());
+						Transaction tran = Cat.newTransaction("FilterPoller", "active-"+ GatewayFilterDAOFactory.getCurrentType());
 						
 						try{
 							List<FilterInfo> newFilters = GatewayFilterDAOFactory.getZuulFilterDAO().getAllActiveFilters();
@@ -159,13 +159,13 @@ public class GatewayFilterPoller {
 		String filterType = newFilter.getFilterType();
 
 		String path = preFiltersPath.get();
-		if (filterType.equals("post")) {
+		if ("post".equals(filterType)) {
 			path = postFiltersPath.get();
-		} else if (filterType.equals("route")) {
+		} else if ("route".equals(filterType)) {
 			path = routeFiltersPath.get();
-		} else if (filterType.equals("error")) {
+		} else if ("error".equals(filterType)) {
 			path = errorFiltersPath.get();
-		} else if (!filterType.equals("pre") && customFiltersPath.get() != null) {
+		} else if (!"pre".equals(filterType) && customFiltersPath.get() != null) {
 			path = customFiltersPath.get();
 		}
 

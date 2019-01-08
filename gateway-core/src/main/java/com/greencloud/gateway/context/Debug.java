@@ -86,7 +86,7 @@ public class Debug {
         Iterator<String> it = context.keySet().iterator();
         String key = it.next();
         while (key != null) {
-            if ((!key.equals("routingDebug") && !key.equals("requestDebug"))) {
+            if ((!"routingDebug".equals(key) && !"requestDebug".equals(key))) {
                 Object newValue = context.get(key);
                 Object oldValue = copy.get(key);
                 if (oldValue == null && newValue != null) {

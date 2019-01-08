@@ -147,7 +147,7 @@ public class HttpServletRequestWrapper extends javax.servlet.http.HttpServletReq
                 LOG.error("Error checking if request body gzipped!", e);
             }
 
-            final boolean isPost = req.getMethod().equals("POST");
+            final boolean isPost = "POST".equals(req.getMethod());
 
             String contentType = req.getContentType();
             final boolean isFormBody = contentType != null && contentType.contains("application/x-www-form-urlencoded");

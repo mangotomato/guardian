@@ -40,7 +40,7 @@ public class StartServer implements ServletContextListener {
 
     private LogConfigurator logConfigurator;
 
-    private static final String[] namespaces = {"application", "httpclient", "redis", "eureka"};
+    private static final String[] namespaces = {"application", "db", "httpclient", "redis", "eureka"};
     public StartServer() {
 
         //System.setProperty(GatewayConstants.DEPLOYMENT_APPLICATION_ID, "gateway");

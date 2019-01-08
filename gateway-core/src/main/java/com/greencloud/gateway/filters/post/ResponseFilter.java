@@ -5,6 +5,7 @@ import com.greencloud.gateway.context.RequestContext;
 import com.greencloud.gateway.exception.GatewayException;
 
 /**
+ * 处理路由响应请求，post filters中优先级最高
  * @author leejianhao
  */
 public class ResponseFilter extends GatewayFilter {
@@ -29,9 +30,9 @@ public class ResponseFilter extends GatewayFilter {
     public Object run() throws GatewayException {
         RequestContext context = RequestContext.getCurrentContext();
         context.set("errorFlush");
-        int statusCode = context.getResponseStatusCode();
-        String errorCasue = String.format("Route Error, fail to invoke target: %s, statusCode: %s", context.getRouteUrl(), statusCode);
-        GatewayException exception = new GatewayException("Route error", statusCode, errorCasue);
+
+        context.getResponse().setStatus(500);
+        GatewayException exception = new GatewayException("Route error", 500, "Failed To Invoke Backend Service");
         context.setThrowable(exception);
         throw exception;
     }

@@ -1,8 +1,7 @@
 package com.greencloud.gateway;
 
-import com.greencloud.gateway.filters.*;
+import com.greencloud.gateway.filters.FilterRegistry;
 import com.greencloud.gateway.filters.error.ErrorResponse;
-import com.greencloud.gateway.filters.post.DebugHeader;
 import com.greencloud.gateway.filters.post.ResponseFilter;
 import com.greencloud.gateway.filters.post.SendResponseFilter;
 import com.greencloud.gateway.filters.pre.AppKeyFilter;
@@ -32,14 +31,13 @@ public class FilterLoader {
     private FilterRegistry filterRegistry = FilterRegistry.instance();
 
     static IDynamicCodeCompiler COMPILER;
-    
+
     static IFilterFactory FILTER_FACTORY = new DefaultFilterFactory();
 
     public FilterLoader() {
-        filterRegistry.put("routeFilter",  new RoutingFilter());
+        filterRegistry.put("routeFilter", new RoutingFilter());
         filterRegistry.put("responseFilter", new ResponseFilter());
         filterRegistry.put("sendResponseFilter", new SendResponseFilter());
-        filterRegistry.put("debugHeader", new DebugHeader());
         filterRegistry.put("errorResponse", new ErrorResponse());
         filterRegistry.put("mockFilter", new MockFilter());
         filterRegistry.put("sentinelFilter", new SentinelFilter());
@@ -65,13 +63,13 @@ public class FilterLoader {
 
     /**
      * Sets a FilterFactory
-     * 
+     *
      * @param factory
      */
     public void setFilterFactory(IFilterFactory factory) {
         FILTER_FACTORY = factory;
     }
-    
+
     /**
      * @return Singleton FilterLoader
      */
@@ -102,7 +100,7 @@ public class FilterLoader {
         if (filter == null) {
             Class clazz = COMPILER.compile(sCode, sName);
             if (!Modifier.isAbstract(clazz.getModifiers())) {
-                filter = (GatewayFilter) FILTER_FACTORY.newInstance(clazz);
+                filter = FILTER_FACTORY.newInstance(clazz);
             }
         }
         return filter;
@@ -165,7 +163,7 @@ public class FilterLoader {
             return list;
         }
 
-        list = new ArrayList<GatewayFilter>();
+        list = new ArrayList<>();
 
         Collection<GatewayFilter> filters = filterRegistry.getAllFilters();
         for (Iterator<GatewayFilter> iterator = filters.iterator(); iterator.hasNext(); ) {

@@ -7,14 +7,18 @@ public class GatewayConstants {
     public static final String DEPLOYMENT_CONFIG_URL = "archaius.configurationSource.additionalUrls";
     public static final String DEPLOYMENT_ENVIRONMENT = "archaius.deployment.environment";
 
-    /** filters */
+    /**
+     * filters
+     */
     public static final String GATEWAY_FILTER_PRE_PATH = "gateway.filter.pre.path";
     public static final String GATEWAY_FILTER_ROUTE_PATH = "gateway.filter.route.path";
     public static final String GATEWAY_FILTER_POST_PATH = "gateway.filter.post.path";
     public static final String GATEWAY_FILTER_ERROR_PATH = "gateway.filter.error.path";
     public static final String GATEWAY_FILTER_CUSTOM_PATH = "gateway.filter.custom.path";
 
-    /** dynamic filters */
+    /**
+     * dynamic filters
+     */
     public static final String GATEWAY_FILTER_POLLER_ENABLED = "gateway.filter.poller.enabled";
     public static final String GATEWAY_FILTER_POLLER_INTERVAL = "gateway.filter.poller.interval";
     public static final String GATEWAY_FILTER_TABLE_NAME = "gateway.filter.table.name";
@@ -29,29 +33,21 @@ public class GatewayConstants {
     public static final String GATEWAY_FILTER_ADMIN_REDIRECT = "gateway.filter.admin.redirect.path";
 
     public static final String GATEWAY_DEBUG_REQUEST = "gateway.debug.request";
-    public static final String GATEWAY_DEBUG_PARAMETER = "gateway.debug.parameter";
-    public static final String GATEWAY_ROUTER_ALT_ROUTE_VIP = "gateway.router.alt.route.vip";
-    public static final String GATEWAY_ROUTER_ALT_ROUTE_HOST = "gateway.router.alt.route.host";
-    public static final String GATEWAY_DEFAULT_HOST = "gateway.default.host";
-    public static final String GATEWAY_HOST_SOCKET_TIMEOUT_MILLIS = "gateway.host.socket-timeout-millis";
-    public static final String GATEWAY_HOST_CONNECT_TIMEOUT_MILLIS = "gateway.host.connect-timeout-millis";
-
-    public static final String GATEWAY_INCLUDE_DEBUG_HEADER = "gateway.include-debug-header";
-    public static final String GATEWAY_INCLUDE_DEBUG_ROUTE_URL_HEADER = "gateway.include-route-url-header";
 
     public static final String GATEWAY_INITIAL_STREAM_BUFFER_SIZE = "gateway.initial-stream-buffer-size";
     public static final String GATEWAY_SET_CONTENT_LENGTH = "gateway.set-content-length";
-    public static final String GATEWAY_DEBUGFILTERS_DISABLED = "gateway.debugFilters.disabled";
-    public static final String GATEWAY_DEBUG_VIP = "gateway.debug.vip";
-    public static final String GATEWAY_DEBUG_HOST = "gateway.debug.host";
 
-    /** async servlet */
+    /**
+     * async servlet
+     */
     public static final String GATEWAY_SERVLET_ASYNC_TIMEOUT = "gateway.servlet.async.timeout";
     public static final String GATEWAY_THREADPOOL_CODE_SIZE = "gateway.thread-pool.core-size";
     public static final String GATEWAY_THREADPOOL_MAX_SIZE = "gateway.thread-pool.maximum-size";
     public static final String GATEWAY_THREADPOOL_ALIVE_TIME = "gateway.thread-pool.alive-time";
 
-    /** datasource */
+    /**
+     * datasource
+     */
     public static final String DATA_SOURCE_CLASS_NAME = "gateway.data-source.class-name";
     public static final String DATA_SOURCE_URL = "gateway.data-source.url";
     public static final String DATA_SOURCE_USER = "gateway.data-source.user";
@@ -63,7 +59,9 @@ public class GatewayConstants {
     public static final String DATA_SOURCE_MAX_LIFETIME = "gateway.data-source.max-lifetime";
     public static final String DATA_SOURCE_INITIALIZATION_FAIL_TIMEOUT = "1000";
 
-    /** redis */
+    /**
+     * redis
+     */
     // 操作超时时间
     public static final String REDIS_TIMEOUT = "redis.timeout";
     // redis url接口以";"分割多个地址
@@ -71,21 +69,25 @@ public class GatewayConstants {
     // jedis池最大连接数总数,默认8
     public static final String REDIS_JEDISPOOLCONFIG_MAXTOTAL = "redis.jedisPoolConfig.maxTotal";
     // jedis池最大空闲连接数，默认8
-    public static final String redis_jedisPoolConfig_minIdle = "redis.jedisPoolConfig.minIdle";
+    public static final String REDIS_JEDISPOOLCONFIG_MINIDLE = "redis.jedisPoolConfig.minIdle";
     // jedis池最少空闲连接数
-    public static final String redis_jedisPoolConfig_maxIdle = "redis.jedisPoolConfig.maxIdle";
+    public static final String REDIS_JEDISPOOLCONFIG_MAXIDLE = "redis.jedisPoolConfig.maxIdle";
     // jedis池没有对象返回时，最大等待时间单位为毫秒
-    public static final String redis_jedisPoolConfig_maxWaitTime = "redis.jedisPoolConfig.maxWaitTime";
+    public static final String REDIS_JEDISPOOLCONFIG_MAXWAITTIME = "redis.jedisPoolConfig.maxWaitTime";
     // 在borrow一个jedis实例时，是否提前进行validate操作
-    public static final String redis_jedisPoolConfig_testOnBorrow = "redis.jedisPoolConfig.testOnBorrow";
+    public static final String REDIS_JEDISPOOLCONFIG_TESTONBORROW = "redis.jedisPoolConfig.testOnBorrow";
 
-    /** http client */
+    /**
+     * http client
+     */
     public static final String GATEWAY_CLIENT_MAX_CONNECTIONS = "gateway.client.max.connections";
     public static final String GATEWAY_CLIENT_ROUTE_MAX_CONNECTIONS = "gateway.client.route.max.connections";
     public static final String GATEWAY_CLIENT_SOCKET_TIMEOUT_MILLIS = "gateway.client.socket.timeout.millis";
     public static final String GATEWAY_CLIENT_CONNECT_TIMEOUT_MILLIS = "gateway.client.connect.timeout.millis";
 
-    /** filters */
+    /**
+     * filters
+     */
     public static final String GATEWAY_RA_ENABLE = "gateway.ra.enable";
     public static final String GATEWAY_RA_TIMESTAMP_VALIDITY_MINUTES = "ra.timestamp_validity_minutes";
 
@@ -94,7 +96,9 @@ public class GatewayConstants {
 
     public static final String IGNORED_HEADERS = "ignoredHeaders";
 
-    /** Prevent instantiation */
+    /**
+     * Prevent instantiation
+     */
     private GatewayConstants() {
         throw new AssertionError("Must not instantiate constant utility class");
     }

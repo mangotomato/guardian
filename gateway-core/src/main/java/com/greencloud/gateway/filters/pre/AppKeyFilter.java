@@ -40,7 +40,6 @@ public class AppKeyFilter extends GatewayFilter {
 
     @Override
     public Object run() throws GatewayException {
-
         RequestContext context = RequestContext.getCurrentContext();
         HttpServletRequest request = context.getRequest();
 
@@ -74,7 +73,7 @@ public class AppKeyFilter extends GatewayFilter {
             String contentMD5Real = MessageDigestUtil.base64AndMD5(IOUtils.toString(reader));
             String contentMD5Expect = request.getHeader(HttpHeader.CONTENT_MD5);
             if (!contentMD5Expect.equals(contentMD5Real)) {
-                throw new GatewayException("Invalid Signature", 403, "Invalid Signature, body's hash error");
+                throw new GatewayException("Invalid Signature", 400, "Invalid Request Body");
             }
         } catch (IOException e) {
         }

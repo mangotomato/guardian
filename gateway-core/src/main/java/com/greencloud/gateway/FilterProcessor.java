@@ -12,12 +12,10 @@ import java.util.List;
 
 public class FilterProcessor {
 
-    static FilterProcessor INSTANCE = new FilterProcessor();
     protected static final Logger logger = LoggerFactory.getLogger(FilterProcessor.class);
 
-    /**
-     * @return the singleton FilterProcessor
-     */
+    private static FilterProcessor INSTANCE = new FilterProcessor();
+
     public static FilterProcessor getInstance() {
         return INSTANCE;
     }
@@ -131,10 +129,8 @@ public class FilterProcessor {
      * @throws GatewayException
      */
     public Object processGatewayFilter(GatewayFilter filter) throws GatewayException {
-
         RequestContext ctx = RequestContext.getCurrentContext();
         boolean bDebug = ctx.debugRouting();
-        final String metricPrefix = "zuul.filter-";
         long execTime = 0;
         String filterName = "";
         try {
@@ -171,7 +167,9 @@ public class FilterProcessor {
                     break;
             }
 
-            if (t != null) throw t;
+            if (t != null) {
+                throw t;
+            }
             return o;
 
         } catch (Throwable e) {

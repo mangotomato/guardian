@@ -2,7 +2,6 @@ package com.greencloud.gateway;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.internal.DefaultMessageProducer;
 import com.greencloud.gateway.context.RequestContext;
 import com.greencloud.gateway.exception.GatewayException;
 import org.slf4j.Logger;
@@ -44,14 +43,14 @@ public class GatewayCallable implements Callable {
             service(ctx.getRequest(), ctx.getResponse());
             tran.setStatus(Transaction.SUCCESS);
         } catch (Throwable t) {
-            logger.error("ZuulCallable execute error.", t);
+            logger.error("GatewayCallable execute error.", t);
             Cat.logError(t);
             tran.setStatus(t);
         } finally {
             try {
                 reportStat(RequestContext.getCurrentContext(), start);
             } catch (Throwable t) {
-                Cat.logError("ZuulCallable collect stats error.", t);
+                Cat.logError("GatewayCallable collect stats error.", t);
             }
             try {
                 ctx.complete();

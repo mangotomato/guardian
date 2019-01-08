@@ -53,9 +53,10 @@ public class IPUtil {
 		String ip = null;
 		try {
 			ip = InetAddress.getLocalHost().getHostAddress().toString();
-		} finally {
 			return ip;
+		} catch (Exception ignored){
 		}
+		return ip;
 	}
 
 	public static String getLocalIP() {
@@ -63,7 +64,6 @@ public class IPUtil {
 		if (!System.getProperty("os.name").contains("Win")) {
 			ip = getLinuxLocalIP();
 		} else {
-
 			ip = getWinLocalIP();
 		}
 		return ip;

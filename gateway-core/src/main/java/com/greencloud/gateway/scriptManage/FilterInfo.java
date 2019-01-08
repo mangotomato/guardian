@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Representation of a ZuulFilter for representing and storing in a database
  */
+@SuppressWarnings("ALL")
 @ThreadSafe
 public class FilterInfo implements  Comparable<FilterInfo>{
 
@@ -88,19 +89,39 @@ public class FilterInfo implements  Comparable<FilterInfo>{
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         FilterInfo that = (FilterInfo) o;
 
-        if (revision != that.revision) return false;
-        if (createTime != null ? !createTime.equals(that.createTime) : that.createTime != null) return false;
-        if (filterCode != null ? !filterCode.equals(that.filterCode) : that.filterCode != null) return false;
-        if (filterId != null ? !filterId.equals(that.filterId) : that.filterId != null) return false;
-        if (filterName != null ? !filterName.equals(that.filterName) : that.filterName != null) return false;
-        if (filterType != null ? !filterType.equals(that.filterType) : that.filterType != null) return false;
-        if (isActive != null ? (isActive.get() != that.isActive.get()) : that.isActive != null) return false;
-        if (isCanary != null ? !(isCanary.get() != that.isCanary.get()) : that.isCanary != null) return false;
+        if (revision != that.revision) {
+            return false;
+        }
+        if (createTime != null ? !createTime.equals(that.createTime) : that.createTime != null) {
+            return false;
+        }
+        if (filterCode != null ? !filterCode.equals(that.filterCode) : that.filterCode != null) {
+            return false;
+        }
+        if (filterId != null ? !filterId.equals(that.filterId) : that.filterId != null) {
+            return false;
+        }
+        if (filterName != null ? !filterName.equals(that.filterName) : that.filterName != null) {
+            return false;
+        }
+        if (filterType != null ? !filterType.equals(that.filterType) : that.filterType != null) {
+            return false;
+        }
+        if (isActive != null ? (isActive.get() != that.isActive.get()) : that.isActive != null) {
+            return false;
+        }
+        if (isCanary != null ? !(isCanary.get() != that.isCanary.get()) : that.isCanary != null) {
+            return false;
+        }
 
         return true;
     }

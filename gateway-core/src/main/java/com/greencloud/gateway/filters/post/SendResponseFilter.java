@@ -61,6 +61,9 @@ public class SendResponseFilter extends GatewayFilter {
     private void addResponseHeaders() {
         RequestContext ctx = RequestContext.getCurrentContext();
         List<Pair<String, String>> responseHeaders = ctx.getGatewayResponseHeaders();
+        if (ctx.debugRequest()) {
+            ctx.getResponse().addHeader("x-gateway", "gateway");
+        }
         if (responseHeaders != null) {
             for (Pair<String, String> pair : responseHeaders) {
                 ctx.getResponse().addHeader(pair.first(), pair.second());
