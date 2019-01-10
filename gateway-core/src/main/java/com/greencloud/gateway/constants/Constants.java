@@ -27,6 +27,14 @@ public class Constants {
     public static final String CONTENT_TYPE_X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded";
 
     /**
+     * cat
+     */
+    public static final String CAT_CHILD_MESSAGE_ID = "X-CAT-CHILD-ID";
+    public static final String CAT_PARENT_MESSAGE_ID = "X-CAT-PARENT-ID";
+    public static final String CAT_ROOT_MESSAGE_ID = "X-CAT-ROOT-ID";
+
+
+    /**
      * Prevent instantiation
      */
     private Constants() {

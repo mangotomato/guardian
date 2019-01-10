@@ -8,6 +8,15 @@
         <listener-class>com.greencloud.gateway.servlet.StartServer</listener-class>
     </listener>
 
+    <filter>
+        <filter-name>CatFilter</filter-name>
+        <filter-class>com.greencloud.gateway.servlet.CatServletFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CatFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <servlet>
         <servlet-name>AsyncZuulServlet</servlet-name>
         <servlet-class>com.greencloud.gateway.servlet.AsyncGatewayServlet</servlet-class>

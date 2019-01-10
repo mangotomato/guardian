@@ -4,6 +4,8 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.message.Transaction;
 import com.google.common.collect.Maps;
 import com.greencloud.gateway.GatewayFilter;
+import com.greencloud.gateway.common.CatContext;
+import com.greencloud.gateway.constants.Constants;
 import com.greencloud.gateway.constants.GatewayConstants;
 import com.greencloud.gateway.context.Debug;
 import com.greencloud.gateway.context.RequestContext;
@@ -51,6 +53,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static com.dianping.cat.Cat.logRemoteCallClient;
 
 /**
  * Route for http
@@ -253,6 +257,11 @@ public class RoutingFilter extends GatewayFilter {
             valBuilder.setLength(valBuilder.length() - 1);
 
             if (isValidHeader(name)) {
+                if (Constants.CAT_PARENT_MESSAGE_ID.equalsIgnoreCase(name)
+                        || Constants.CAT_CHILD_MESSAGE_ID.equalsIgnoreCase(name)
+                        || Constants.CAT_ROOT_MESSAGE_ID.equalsIgnoreCase(name)) {
+                    continue;
+                }
                 headers.put(name.toLowerCase(), new BasicHeader(name, valBuilder.toString()));
                 if ("X-Forwarded-For".equalsIgnoreCase(name)) {
                     headers.put("X-GW-IPADDRESS", new BasicHeader("X-GW-IPADDRESS", StringUtils.substringBefore(valBuilder.toString(), ",")));
@@ -261,6 +270,13 @@ public class RoutingFilter extends GatewayFilter {
                 }
             }
         }
+
+        // 将cat上下文通过header传递给下游
+        Cat.Context ctx = new CatContext();
+        Cat.logRemoteCallClient(ctx);
+        headers.put(Constants.CAT_ROOT_MESSAGE_ID, new BasicHeader(Constants.CAT_ROOT_MESSAGE_ID, ctx.getProperty(Cat.Context.ROOT)));
+        headers.put(Constants.CAT_PARENT_MESSAGE_ID, new BasicHeader(Constants.CAT_PARENT_MESSAGE_ID, ctx.getProperty(Cat.Context.PARENT)));
+        headers.put(Constants.CAT_CHILD_MESSAGE_ID, new BasicHeader(Constants.CAT_CHILD_MESSAGE_ID, ctx.getProperty(Cat.Context.CHILD)));
 
         // Additional gateway's headers
         Map<String, String> gatewayRequestHeaders = RequestContext.getCurrentContext().getGatewayRequestHeaders();

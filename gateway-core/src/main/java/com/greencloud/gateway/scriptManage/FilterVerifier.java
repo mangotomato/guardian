@@ -6,7 +6,7 @@ import groovy.lang.GroovyClassLoader;
 
 /**
  * verifies that the given source code is compilable in Groovy, can be
- * instanciated, and is a ZuulFilter type
+ * instanciated, and is a GatewayFilter type
  *
  */
 public class FilterVerifier {
@@ -20,7 +20,7 @@ public class FilterVerifier {
 	}
 
 	/**
-	 * verifies compilation, instanciation and that it is a ZuulFilter
+	 * verifies compilation, instanciation and that it is a GatewayFilter
 	 *
 	 * @param sFilterCode
 	 * @return a FilterInfo object representing that code
@@ -33,7 +33,7 @@ public class FilterVerifier {
 			IllegalAccessException, InstantiationException {
 		Class groovyClass = compileGroovy(sFilterCode);
 		Object instance = instanciateClass(groovyClass);
-		checkZuulFilterInstance(instance);
+		checkGateayFilterInstance(instance);
 		GatewayFilter filter = (GatewayFilter) instance;
 
 		String filter_id = FilterInfo.buildFilterId(GatewayConstants.APPLICATION_NAME, filter.filterType(),
@@ -47,9 +47,9 @@ public class FilterVerifier {
 		return groovyClass.newInstance();
 	}
 
-	void checkZuulFilterInstance(Object zuulFilter) throws InstantiationException {
-		if (!(zuulFilter instanceof GatewayFilter)) {
-			throw new InstantiationException("Code is not a ZuulFilter Class ");
+	void checkGateayFilterInstance(Object gatewayFilter) throws InstantiationException {
+		if (!(gatewayFilter instanceof GatewayFilter)) {
+			throw new InstantiationException("Code is not a GatewayFilter Class ");
 		}
 	}
 
