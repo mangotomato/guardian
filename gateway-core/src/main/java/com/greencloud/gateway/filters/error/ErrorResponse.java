@@ -3,6 +3,7 @@ package com.greencloud.gateway.filters.error;
 import com.google.common.base.Strings;
 import com.greencloud.gateway.GatewayFilter;
 import com.greencloud.gateway.constants.GatewayConstants;
+import com.greencloud.gateway.constants.SystemHeader;
 import com.greencloud.gateway.context.RequestContext;
 import com.greencloud.gateway.exception.GatewayException;
 import org.apache.commons.io.IOUtils;
@@ -54,7 +55,7 @@ public class ErrorResponse extends GatewayFilter {
                 }
             }
 
-            RequestContext.getCurrentContext().getResponse().addHeader("X-GW-Error-Cause", "Gateway Error: " + errorCause);
+            RequestContext.getCurrentContext().getResponse().addHeader(SystemHeader.X_GW_ERROR_CAUSE, errorCause);
 
             if (getOverrideStatusCode()) {
                 RequestContext.getCurrentContext().setResponseStatusCode(200);
@@ -64,9 +65,9 @@ public class ErrorResponse extends GatewayFilter {
 
             //Don't continue
             ctx.setSendGatewayResponse(false);
-            ctx.setResponseBody(getErrorMessage(errorCause, responseStatusCode));
+            // ctx.setResponseBody(getErrorMessage(errorCause, responseStatusCode));
             //The error throws by post filters must output
-            tryFlushResponse(ctx);
+            // tryFlushResponse(ctx);
         } finally {
             //ErrorResponse was handled
             ctx.errorHandled();

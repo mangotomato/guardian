@@ -20,7 +20,7 @@ public class SentinelFilter extends GatewayFilter {
 
     @Override
     public int filterOrder() {
-        return 20;
+        return 30;
     }
 
     @Override

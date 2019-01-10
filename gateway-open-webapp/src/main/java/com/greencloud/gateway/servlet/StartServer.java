@@ -11,10 +11,7 @@ import com.greencloud.gateway.groovy.GroovyFileFilter;
 import com.greencloud.gateway.scriptManage.GatewayFilterPoller;
 import com.greencloud.gateway.util.IPUtil;
 import com.netflix.appinfo.*;
-import com.netflix.config.ConfigurationManager;
-import com.netflix.config.DynamicBooleanProperty;
-import com.netflix.config.DynamicPropertyFactory;
-import com.netflix.config.DynamicStringProperty;
+import com.netflix.config.*;
 import com.netflix.discovery.DefaultEurekaClientConfig;
 import com.netflix.discovery.DiscoveryManager;
 import org.apache.commons.configuration.AbstractConfiguration;
@@ -36,11 +33,12 @@ public class StartServer implements ServletContextListener {
 
     private Logger logger = LoggerFactory.getLogger(StartServer.class);
 
-    private String appName = null;
+    private String appName = GatewayConstants.APPLICATION_NAME;
 
     private LogConfigurator logConfigurator;
 
     private static final String[] namespaces = {"application", "db", "httpclient", "redis", "eureka"};
+
     public StartServer() {
 
         //System.setProperty(GatewayConstants.DEPLOYMENT_APPLICATION_ID, "gateway");
@@ -54,17 +52,14 @@ public class StartServer implements ServletContextListener {
 
         StringBuilder configUrls = new StringBuilder();
         for (String namespace : namespaces) {
-            configUrls.append(configServer+"/configfiles/gateway/default/"+namespace+",");
+            configUrls.append(configServer + "/configfiles/gateway/default/" + namespace + ",");
         }
         String configUrlConcat = StringUtils.removeEnd(configUrls.toString(), ",");
 
         System.setProperty(GatewayConstants.DEPLOYMENT_CONFIG_URL, configUrlConcat);
 
-        String applicationID = ConfigurationManager.getConfigInstance().getString(GatewayConstants.DEPLOYMENT_APPLICATION_ID);
-        if (Strings.isNullOrEmpty(applicationID)) {
-            logger.warn("Using default config!");
-            ConfigurationManager.getConfigInstance().setProperty(GatewayConstants.DEPLOYMENT_APPLICATION_ID, "gateway");
-        }
+        // System.setProperty("archaius.fixedDelayPollingScheduler.initialDelayMills", "30000");
+        // System.setProperty("archaius.fixedDelayPollingScheduler.delayMills", "60000");
 
         System.setProperty(DynamicPropertyFactory.ENABLE_JMX, "true");
 
@@ -81,7 +76,7 @@ public class StartServer implements ServletContextListener {
             initGateway();
             updateInstanceStatusToEureka();
         } catch (Exception e) {
-            logger.error("Error while initializing zuul gateway.", e);
+            logger.error("Error while initializing gateway.", e);
             throw new RuntimeException(e);
         }
     }
@@ -98,13 +93,17 @@ public class StartServer implements ServletContextListener {
         //load local filter files
         FilterLoader.getInstance().setCompiler(new GroovyCompiler());
         FilterFileManager.setFilenameFilter(new GroovyFileFilter());
+
+        DynamicIntProperty pollerInterval = DynamicPropertyFactory.getInstance()
+                .getIntProperty(GatewayConstants.GATEWAY_FILTER_MANAGER_POLLER_INTERVAL_SECONDS, 5);
+
         if (customPath == null) {
-            FilterFileManager.init(5, preFiltersPath, postFiltersPath, routeFiltersPath, errorFiltersPath);
+            FilterFileManager.init(pollerInterval.get(), preFiltersPath, postFiltersPath, routeFiltersPath, errorFiltersPath);
         } else {
-            FilterFileManager.init(5, preFiltersPath, postFiltersPath, routeFiltersPath, errorFiltersPath, customPath);
+            FilterFileManager.init(pollerInterval.get(), preFiltersPath, postFiltersPath, routeFiltersPath, errorFiltersPath, customPath);
         }
         //load filters in DB
-        startZuulFilterPoller();
+        startGatewayFilterPoller();
         logger.info("Groovy Filter file manager started");
     }
 
@@ -116,33 +115,24 @@ public class StartServer implements ServletContextListener {
         ApplicationInfoManager.getInstance().setInstanceStatus(InstanceInfo.InstanceStatus.UP);
     }
 
-    private void startZuulFilterPoller() {
+    private void startGatewayFilterPoller() {
         GatewayFilterPoller.start();
         logger.info("GatewayFilterPoller Started.");
     }
 
     private void loadConfiguration() {
-        appName = ConfigurationManager.getDeploymentContext().getApplicationId();
         // Loading properties via archaius.
-        if (!Strings.isNullOrEmpty(appName)) {
-            try {
-                logger.info(String.format("Loading application properties with app id: %s and environment: %s", appName,
-                        ConfigurationManager.getDeploymentContext().getDeploymentEnvironment()));
-                ConfigurationManager.loadCascadedPropertiesFromResources(appName);
-            } catch (IOException e) {
-                logger.error(String.format(
-                        "Failed to load properties for application id: %s and environment: %s. This is ok, if you do not have application level properties.",
-                        appName, ConfigurationManager.getDeploymentContext().getDeploymentEnvironment()), e);
-            }
-        } else {
-            logger.warn(
-                    "Application identifier not defined, skipping application level properties loading. You must set a property 'archaius.deployment.applicationId' to be able to load application level properties.");
+        try {
+            ConfigurationManager.loadCascadedPropertiesFromResources(appName);
+        } catch (IOException e) {
+            logger.error(String.format(
+                    "Failed to load properties for application id: %s and environment: %s. This is ok, if you do not have application level properties.",
+                    appName, ConfigurationManager.getDeploymentContext().getDeploymentEnvironment()), e);
         }
     }
 
-
     private void configLog() {
-        logConfigurator = new LogConfigurator(appName,ConfigurationManager.getDeploymentContext().getDeploymentEnvironment());
+        logConfigurator = new LogConfigurator(appName, ConfigurationManager.getDeploymentContext().getDeploymentEnvironment());
         logConfigurator.config();
     }
 
@@ -191,17 +181,6 @@ public class StartServer implements ServletContextListener {
 //        }
 
         ApplicationInfoManager.getInstance().registerAppMetadata(metadata);
-    }
-
-    public String getTurbineInstance() {
-        String instance = null;
-        String ip = IPUtil.getLocalIP();
-        if (ip != null) {
-            instance = ip + ":" + ConfigurationManager.getConfigInstance().getString("server.internals.port", "8077");
-        } else {
-            logger.warn("Can't build turbine instance as can't fetch the ip.");
-        }
-        return instance;
     }
 
     @Override

@@ -3,8 +3,12 @@ package com.greencloud.gateway.servlet;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Transaction;
 import com.greencloud.gateway.constants.GatewayConstants;
+import com.greencloud.gateway.constants.HttpHeader;
+import com.greencloud.gateway.constants.SystemHeader;
 import com.greencloud.gateway.context.RequestContext;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,22 +30,26 @@ public class AsyncGatewayListener implements AsyncListener {
     @Override
     public void onTimeout(AsyncEvent event) throws IOException {
         String url = ((HttpServletRequest)event.getAsyncContext().getRequest()).getRequestURL().toString();
-        try {
-            Transaction tran = Cat.newTransaction("Timeout", url);
-            HttpServletResponse servletResponse = (HttpServletResponse) event.getAsyncContext().getResponse();
-            OutputStream outputStream = servletResponse.getOutputStream();
-            try {
-                String body = "{\"msg\":\"Timeout\","+"\"result\":\"504\"}";
-                IOUtils.copy(new ByteArrayInputStream(body.getBytes(GatewayConstants.DEFAULT_CHARACTER_ENCODING)), outputStream);
-                outputStream.flush();
-                tran.setStatus(Transaction.SUCCESS);
-            } catch (Exception e) {
-                tran.setStatus(e);
-            } finally {
-                tran.complete();
-            }
-        } catch (Exception ignored) {
-        }
+//        try {
+//            Transaction tran = Cat.newTransaction("Timeout", url);
+//            HttpServletResponse servletResponse = (HttpServletResponse) event.getAsyncContext().getResponse();
+//            OutputStream outputStream = servletResponse.getOutputStream();
+//            try {
+//                String body = "{\"msg\":\"Timeout\","+"\"result\":\"504\"}";
+//                IOUtils.copy(new ByteArrayInputStream(body.getBytes(GatewayConstants.DEFAULT_CHARACTER_ENCODING)), outputStream);
+//                outputStream.flush();
+//                tran.setStatus(Transaction.SUCCESS);
+//            } catch (Exception e) {
+//                tran.setStatus(e);
+//            } finally {
+//                tran.complete();
+//            }
+//        } catch (Exception ignored) {
+//        }
+        HttpServletResponse response = (HttpServletResponse) event.getAsyncContext().getResponse();
+        response.setStatus(504);
+        response.addHeader(SystemHeader.X_GW_ERROR_CAUSE, "Timeout");
+        response.addHeader(HttpHeader.CONTENT_TYPE, GatewayConstants.DEFAULT_CONTENT_TYPE);
         logger.error("Access {} timeout in AsyncServlet.", url);
     }
 

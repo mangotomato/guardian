@@ -119,7 +119,7 @@ public class FilterInfo implements  Comparable<FilterInfo>{
         if (isActive != null ? (isActive.get() != that.isActive.get()) : that.isActive != null) {
             return false;
         }
-        if (isCanary != null ? !(isCanary.get() != that.isCanary.get()) : that.isCanary != null) {
+        if (isCanary != null ? (isCanary.get() != that.isCanary.get()) : that.isCanary != null) {
             return false;
         }
 

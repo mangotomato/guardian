@@ -5,6 +5,9 @@ public class GatewayConstants {
     public static final String APPLICATION_NAME = "gateway";
     public static final String DEPLOYMENT_APPLICATION_ID = "archaius.deployment.applicationId";
     public static final String DEPLOYMENT_CONFIG_URL = "archaius.configurationSource.additionalUrls";
+    public static final String DEPLOYMENT_CONFIG_FILENAME = "archaius.configurationSource.defaultFileName";
+    public static final String DEPLOYMENT_CONFIG_INITIALDELAYMILLS = "archaius.fixedDelayPollingScheduler.initialDelayMills";
+    public static final String DEPLOYMENT_CONFIG_DELAYMILLS = "archaius.fixedDelayPollingScheduler.delayMills";
     public static final String DEPLOYMENT_ENVIRONMENT = "archaius.deployment.environment";
 
     /**
@@ -19,6 +22,7 @@ public class GatewayConstants {
     /**
      * dynamic filters
      */
+    public static final String GATEWAY_FILTER_MANAGER_POLLER_INTERVAL_SECONDS = "gateway.filter.manager.poller.interval.seconds";
     public static final String GATEWAY_FILTER_POLLER_ENABLED = "gateway.filter.poller.enabled";
     public static final String GATEWAY_FILTER_POLLER_INTERVAL = "gateway.filter.poller.interval";
     public static final String GATEWAY_FILTER_TABLE_NAME = "gateway.filter.table.name";
@@ -90,8 +94,9 @@ public class GatewayConstants {
      */
     public static final String GATEWAY_RA_ENABLE = "gateway.ra.enable";
     public static final String GATEWAY_RA_TIMESTAMP_VALIDITY_MINUTES = "ra.timestamp_validity_minutes";
+    public static final String GATEWAY_ROUTES_TABLE = "gateway.routes.table";
 
-    public static final String DEFAULT_CONTENT_TYPE = "application/json";
+    public static final String DEFAULT_CONTENT_TYPE = "application/json;charset=utf-8";
     public static final String DEFAULT_CHARACTER_ENCODING = "UTF-8";
 
     public static final String IGNORED_HEADERS = "ignoredHeaders";

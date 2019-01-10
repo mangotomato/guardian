@@ -34,6 +34,8 @@ public class SystemHeader {
     // API版本号，暂时不用
     public static final String X_GW_VERSION = "x-gw-version";
 
+    public static final String X_GW_ERROR_CAUSE = "x-gw-error-cause";
+
     /* -------------- 系统级Header -------------- */
 
     /**

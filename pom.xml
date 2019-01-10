@@ -51,7 +51,7 @@
         <guava.version>18.0</guava.version>
         <mockito.version>1.8.5</mockito.version>
         <fastjson.version>1.2.31</fastjson.version>
-        <archaius.version>0.5.11</archaius.version>
+        <archaius.version>0.6.0</archaius.version>
         <netflix-commons.version>0.1.1</netflix-commons.version>
         <cat.version>2.0.0</cat.version>
         <eureka.version>1.4.12</eureka.version>
