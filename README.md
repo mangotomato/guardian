@@ -1,7 +1,9 @@
 <img src="https://github.com/mangotomato/uploads/blob/master/Guardian%20logo.png" alt="Guardian Logo" width="50%">
 
 # Guardian: Guardian of your APIs (http/https)
+
 ## Introduction
+
 We have the requirement for publishing our service to public more urgent as the rapid bussiness explosion. So, Guardian comes up.
 As a api gateway, guardian is a edge service, provide single entry to access backend service. Guardian designed for protecting backend service, to guarantee service reliability.
 
@@ -15,6 +17,10 @@ Guardian has the following features:
 - **Botblocker**: Guardian provide a basic anti-reptile filter.
 - **Authentication**: Guardian supports AppKey and OpenID-Connect authetication.
 - **Real-time monitor**: Guardian integrate with meituan's Cat, you can real-time monitor Guardian's state. Also, Cat provide alarm support.
+
+## Documentation
+
+See the [中文文档](https://github.com/mangotomato/guardian/wiki/Guardian%E4%BB%8B%E7%BB%8D) for Chinese document.
 
 ## Overall structure
 <img src="https://github.com/mangotomato/uploads/blob/master/architecturev1.0.png" alt="整体架构">
