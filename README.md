@@ -9,6 +9,7 @@ As a api gateway, guardian is a edge service, provide single entry to access bac
 
 Guardian has the following features:
 - **Api management**:  Guardian provide the web console to management api's lifecycle. You can define, release and downline a api.
+- **Dynamic routing**: Guardian actor as a reverse proxy, support dynamic routing according to your confs.
 - **Dynamic filters**:  Guardian supports dynamic load filters. For example, you can upload a new filter's source code, guardian able to poll the change, compile the source code, and plugin the filter to current filter's pipeline. Basicly, you can active/inactive a filter.
 - **Dynamic configuration**: Guardian integrate with ctrip's Apollo, you can easily change Guardian's state. For example, httpclient's Socket timeout, database confs etc.
 - **Ip access control**: Guardian integrate with alibaba's Sentinel, Sentinel provide the 'black and white ip list' control.
