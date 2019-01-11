@@ -25,9 +25,12 @@ See the [中文文档](https://github.com/mangotomato/guardian/wiki/Guardian%E4%
 
 ## Overall structure
 
-<img src="https://github.com/mangotomato/uploads/blob/master/architecturev1.0.png" alt="整体架构">
+<img src="https://github.com/mangotomato/uploads/blob/master/architecturev1.0.png" alt="Overall structure">
 
 ## Design
 
 Guardian Adapted zuul's fiter design, below image shows zuul request lifecycle, filter is everywhere.
 <img src="https://github.com/mangotomato/uploads/blob/master/zuul_request_lifecycle.png" width="75%" height="75%" alt="zuul filter lifecycle">
+
+Guardin introduced the servlet 3.0 asynchronous feature，which can hold more requests.
+<img src="https://github.com/mangotomato/uploads/blob/master/async_servlet.png" alt="async servlet">
