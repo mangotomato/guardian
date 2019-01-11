@@ -17,4 +17,4 @@ Guardian has the following features:
 - **Real-time monitor**: Guardian integrate with meituan's Cat, you can real-time monitor Guardian's state. Also, Cat provide alarm support.
 
 ## Overall structure
-<img src="https://github.com/mangotomato/uploads/blob/master/architecture.png" alt="整体架构">
+<img src="https://github.com/mangotomato/uploads/blob/master/architecturev1.0.png" alt="整体架构">
