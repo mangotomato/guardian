@@ -13,7 +13,7 @@ Guardian has the following features:
 - **Dynamic configuration**: Guardian integrate with ctrip's Apollo, you can easily change Guardian's state. For example, httpclient's Socket timeout, database confs etc.
 - **Ip access control**: Guardian integrate with alibaba's Sentinel, Sentinel provide the 'black and white ip list' control.
 - **Flow control**: Guardian integrate with alibaba's Sentinel, provide flow control.
-- **Rewrite**: Guardian will buffer request stream, So, you can checking, transform the request body by defining rewrite rules.
+- **Rewrite**: Guardian will buffer request stream, So, you can checking, filter, transform the request body by defining rewrite rules.
 - **Botblocker**: Guardian provide a basic anti-reptile filter.
 - **Authentication**: Guardian supports AppKey and OpenID-Connect authetication.
 - **Real-time monitor**: Guardian integrate with meituan's Cat, you can real-time monitor Guardian's state. Also, Cat provide alarm support.
