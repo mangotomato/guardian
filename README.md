@@ -24,4 +24,10 @@ Guardian has the following features:
 See the [中文文档](https://github.com/mangotomato/guardian/wiki/Guardian%E4%BB%8B%E7%BB%8D) for Chinese document.
 
 ## Overall structure
+
 <img src="https://github.com/mangotomato/uploads/blob/master/architecturev1.0.png" alt="整体架构">
+
+## Design
+
+Guardian Adapted zuul's fiter design, below image shows zuul request lifecycle, filter is everywhere.
+<img src="https://github.com/mangotomato/uploads/blob/master/zuul_request_lifecycle.png" width="75%" height="75%" alt="zuul filter lifecycle">
