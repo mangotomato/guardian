@@ -9,7 +9,7 @@
     <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>${project.artifactId}</name>
-    <description>The parent project of Estelle</description>
+    <description>The parent project of gateway</description>
 
     <modules>
         <!-- core -->

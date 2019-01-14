@@ -40,9 +40,9 @@ public class SendResponseFilter extends GatewayFilter {
 
     @Override
     public boolean shouldFilter() {
-        return !RequestContext.getCurrentContext().getOriginResponseHeaders().isEmpty()
-                or RequestContext.getCurrentContext().getResponseDataStream() != null
-                or RequestContext.getCurrentContext().getResponseBody() != null;
+        return !RequestContext.getCurrentContext().getOriginResponseHeaders().isEmpty() ||
+                 RequestContext.getCurrentContext().getResponseDataStream() != null ||
+                 RequestContext.getCurrentContext().getResponseBody() != null;
     }
 
     @Override

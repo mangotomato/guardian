@@ -11,6 +11,10 @@
     <filter>
         <filter-name>CatFilter</filter-name>
         <filter-class>com.greencloud.gateway.servlet.CatServletFilter</filter-class>
+        <!--<init-param>-->
+            <!--<param-name>ignoreUrls</param-name>-->
+            <!--<param-value>/admin/**</param-value>-->
+        <!--</init-param>-->
     </filter>
     <filter-mapping>
         <filter-name>CatFilter</filter-name>

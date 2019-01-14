@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author leejianhao
  */
 public class SentinelFilter extends GatewayFilter {
+
     @Override
     public String filterType() {
         return "pre";

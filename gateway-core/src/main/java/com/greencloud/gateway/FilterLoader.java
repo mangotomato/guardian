@@ -32,7 +32,7 @@ public class FilterLoader {
     static IFilterFactory FILTER_FACTORY = new DefaultFilterFactory();
 
     public FilterLoader() {
-        filterRegistry.put("mappingFilter", new MappingFilter());
+//        filterRegistry.put("mappingFilter", new MappingFilter());
 //        filterRegistry.put("routeFilter", new RoutingFilter());
 //        filterRegistry.put("responseFilter", new ResponseFilter());
 //        filterRegistry.put("sendResponseFilter", new SendResponseFilter());

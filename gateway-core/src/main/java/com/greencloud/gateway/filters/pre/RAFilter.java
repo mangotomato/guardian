@@ -43,7 +43,7 @@ public class RAFilter extends GatewayFilter {
 
     @Override
     public boolean shouldFilter() {
-        return rAEnabled();
+        return !RequestContext.getCurrentContext().isHealthCheckRequest() && rAEnabled();
     }
 
     @Override

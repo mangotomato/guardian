@@ -3,16 +3,25 @@ package com.greencloud.gateway.servlet;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.google.common.collect.Lists;
 import com.greencloud.gateway.common.CatContext;
+import com.greencloud.gateway.common.ant.AntPathMatcher;
+import com.greencloud.gateway.common.ant.PathMatcher;
 import com.greencloud.gateway.constants.Constants;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class CatServletFilter implements Filter {
 
 	private String[] urlPatterns = new String[0];
+	private List<String> ignoreUrls = Collections.emptyList();
+
+	private PathMatcher matcher = new AntPathMatcher();
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -25,6 +34,15 @@ public class CatServletFilter implements Filter {
 				urlPatterns[i] = urlPatterns[i].trim();
 			}
 		}
+
+		String ignoreUrlString = filterConfig.getInitParameter("ignoreUrls");
+		if (ignoreUrlString != null) {
+			String[] ignoreUrlArr = ignoreUrlString.trim().split(",");
+			for (int i = 0; i < ignoreUrlArr.length; i++) {
+				ignoreUrlArr[i] = ignoreUrlArr[i].trim();
+			}
+			ignoreUrls = Arrays.asList(ignoreUrlArr);
+		}
 	}
 
 	@Override
@@ -33,6 +51,18 @@ public class CatServletFilter implements Filter {
             ServletException {
 
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
+
+		String contextPath = request.getContextPath();
+		String path = request.getRequestURI();
+		if (contextPath != null && contextPath.trim().length() > 0) {
+			path = request.getRequestURI().replace(contextPath, "");
+		}
+
+		for (String ignoreUrl : ignoreUrls) {
+			if (matcher.match(ignoreUrl, path)) {
+				return;
+			}
+		}
 
 		String url = request.getRequestURL().toString();
 		for (String urlPattern : urlPatterns) {

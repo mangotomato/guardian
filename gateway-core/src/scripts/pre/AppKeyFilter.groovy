@@ -35,7 +35,7 @@ public class AppKeyFilter extends GatewayFilter {
 
     @Override
     public boolean shouldFilter() {
-        return true;
+        return !RequestContext.getCurrentContext().isHealthCheckRequest();
     }
 
     @Override
@@ -124,8 +124,10 @@ public class AppKeyFilter extends GatewayFilter {
         return "default";
     }
 
-    private List<String> getCustomSignHeaders() {
-        return Collections.emptyList();
+    private List<String> getCustomSignHeaders(HttpServletRequest request) {
+        String signatureHeaderString= request.getHeader(SystemHeader.X_GW_SIGNATURE_HEADERS);
+        String[] signatureHeaders = StringUtils.split(signatureHeaderString, ',');
+        return Arrays.asList(signatureHeaders);
     }
 
 }

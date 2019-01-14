@@ -525,6 +525,15 @@ public class RequestContext extends ConcurrentHashMap<String, Object> {
         return requestEncoding != null && requestEncoding.toLowerCase().contains("gzip");
     }
 
+    public boolean isHealthCheckRequest() {
+        final Object v = get("healthCheckRequest");
+        return (v != null) ? (Boolean) v : false;
+    }
+
+    public void setHealthCheckRequest() {
+        this.set("healthCheckRequest", Boolean.TRUE);
+    }
+
     /**
      * unsets the threadLocal context. Done at the end of the request.
      */
