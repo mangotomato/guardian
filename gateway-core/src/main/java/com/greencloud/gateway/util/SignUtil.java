@@ -3,6 +3,7 @@ package com.greencloud.gateway.util;
 import com.greencloud.gateway.constants.Constants;
 import com.greencloud.gateway.constants.HttpHeader;
 import com.greencloud.gateway.constants.SystemHeader;
+import com.greencloud.gateway.context.RequestContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -10,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -89,7 +92,12 @@ public class SignUtil {
         sb.append(buildHeaders(headers, signHeaderPrefixList));
         sb.append(buildResource(path, querys, bodys));
 
-        logger.debug("stringToSign: \n" + sb.toString());
+        try {
+            RequestContext.getCurrentContext().set("stringToSign",
+                    URLEncoder.encode(sb.toString().replace('\n', '#'), "UTF-8"));
+        } catch (UnsupportedEncodingException ignored) {
+        }
+
         return sb.toString();
     }
 

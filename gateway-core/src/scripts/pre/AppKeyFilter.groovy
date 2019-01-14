@@ -10,6 +10,7 @@ import com.greencloud.gateway.util.HTTPRequestUtil;
 import com.greencloud.gateway.util.MessageDigestUtil;
 import com.greencloud.gateway.util.SignUtil;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
@@ -59,7 +60,7 @@ public class AppKeyFilter extends GatewayFilter {
             assertContentMD5Equal(request);
         }
 
-        List<String> customSignHeaders = getCustomSignHeaders();
+        List<String> customSignHeaders = getCustomSignHeaders(request);
 
         assertSignature(request, secret, method, path, headers, querys, formBodys, customSignHeaders);
 
@@ -86,7 +87,8 @@ public class AppKeyFilter extends GatewayFilter {
         String signatureReal = SignUtil.sign(secret, method, path, headers, querys, bodys, customSignHeaders);
         String signatureExpect = request.getHeader(SystemHeader.X_GW_SIGNATURE);
         if (!signatureReal.equals(signatureExpect)) {
-            throw new GatewayException("Invalid Signature", 403, "Invalid Signature");
+            throw new GatewayException("Invalid Signature", 403,
+                    "Invalid Signature,stringToSign: " + RequestContext.getCurrentContext().get("stringToSign"));
         }
 
     }
