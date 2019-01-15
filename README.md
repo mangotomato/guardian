@@ -12,8 +12,8 @@ Guardian has the following features:
 - **Dynamic routing**: Guardian actor as a reverse proxy, support dynamic routing according to your confs.
 - **Dynamic filters**:  Guardian supports dynamic loading filters. For example, you can upload a new filter's source code, guardian able to poll the change, compile the source code, and plugin the filter to current filter's pipeline. Basicly, you can active/inactive a filter.
 - **Dynamic configuration**: Guardian integrate with ctrip's Apollo, you can easily change Guardian's state. For example, httpclient's Socket timeout, database confs etc.
-- **IP access control**: 待定
-- **Flow control**: 待定
+- **IP access control**: black white ip list
+- **Flow control**: traffic control, from the app, user, api aspect
 - **Rewrite**: Guardian will buffer request stream, So, you can check, filter, transform the request body by defining rewrite rules.
 - **Botblocker**: Guardian provide a basic anti-reptile filter.
 - **Authentication**: Guardian supports AppKey and OpenID-Connect authetication.
