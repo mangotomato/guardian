@@ -5,19 +5,19 @@
 ## Introduction
 
 We have the requirement for publishing our service to public more urgent as the rapid bussiness explosion. So, Guardian comes up.
-As a API gateway, guardian is a edge service, provide single entry to access backend service. Guardian designed for protecting backend service, to guarantee service reliability.
+As a API gateway, guardian is a edge service, provide single entry to access backend service. Guardian designed for protecting backend service.
 
 Guardian has the following features:
-- **API management**:  Guardian provide the web console to management API's lifecycle. You can define, release and downline a API.
-- **Dynamic routing**: Guardian actor as a reverse proxy, support dynamic routing according to your confs.
-- **Dynamic filters**:  Guardian supports dynamic loading filters. For example, you can upload a new filter's source code, guardian able to poll the change, compile the source code, and plugin the filter to current filter's pipeline. Basicly, you can active/inactive a filter.
-- **Dynamic configuration**: Guardian integrate with ctrip's Apollo, you can easily change Guardian's state. For example, httpclient's Socket timeout, database confs etc.
-- **IP access control**: black white ip list
-- **Flow control**: traffic control, from the app, user, api aspect
-- **Rewrite**: Guardian will buffer request stream, So, you can check, filter, transform the request body by defining rewrite rules.
-- **Botblocker**: Guardian provide a basic anti-reptile filter.
-- **Authentication**: Guardian supports AppKey and OpenID-Connect authetication.
-- **Real-time monitor**: Guardian integrate with meituan's Cat, you can real-time monitor Guardian's state. Also, Cat provide alarm support.
+- **API Lifecycle Management**
+- **Dynamic Routing**
+- **Dynamic Filters**
+- **Dynamic Configuration**
+- **Traffic Control**
+- **Parameter Check**
+- **Data Transform**
+- **Botblocker**
+- **Authentication**
+- **Real-time Monitor**
 
 ## Documentation
 
