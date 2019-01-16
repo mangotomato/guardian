@@ -39,7 +39,7 @@ Guardian has the following features:
 
 - **Botblocker**  
 
-&nbsp;&nbsp;&nbsp;&nbsp;Provider a Basic anti-replite filter.  
+&nbsp;&nbsp;&nbsp;&nbsp;Provider a basic anti-replite filter.  
 
 - **Safety**
 
