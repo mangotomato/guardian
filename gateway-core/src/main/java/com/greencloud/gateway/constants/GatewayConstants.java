@@ -80,6 +80,8 @@ public class GatewayConstants {
     public static final String REDIS_JEDISPOOLCONFIG_MAXWAITTIME = "redis.jedisPoolConfig.maxWaitTime";
     // 在borrow一个jedis实例时，是否提前进行validate操作
     public static final String REDIS_JEDISPOOLCONFIG_TESTONBORROW = "redis.jedisPoolConfig.testOnBorrow";
+    // 密码
+    public static final String REDIS_JEDISPOOLCONFIG_PASSWORD = "redis.jedisPoolConfig.password";
 
     /**
      * http client

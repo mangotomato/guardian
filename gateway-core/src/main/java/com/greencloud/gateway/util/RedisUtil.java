@@ -46,6 +46,7 @@ public class RedisUtil {
     private static final DynamicIntProperty JEDISPOOLCONFIG_MINIDLE = DynamicPropertyFactory.getInstance().getIntProperty(REDIS_JEDISPOOLCONFIG_MINIDLE, 0);
     private static final DynamicIntProperty JEDISPOOLCONFIG_MAXWAITTIME = DynamicPropertyFactory.getInstance().getIntProperty(REDIS_JEDISPOOLCONFIG_MAXWAITTIME, -1);
     private static final DynamicBooleanProperty JEDISPOOLCONFIG_TESTONBORROW = DynamicPropertyFactory.getInstance().getBooleanProperty(REDIS_JEDISPOOLCONFIG_TESTONBORROW, true);
+    private static final DynamicStringProperty JEDISPOOLCONFIG_PASSWORD = DynamicPropertyFactory.getInstance().getStringProperty(REDIS_JEDISPOOLCONFIG_PASSWORD, "");
 
     private static final RedisUtil INSTANCE = new RedisUtil();
 
@@ -57,6 +58,7 @@ public class RedisUtil {
         JEDISPOOLCONFIG_MINIDLE.addCallback(RENEW_POOL);
         JEDISPOOLCONFIG_MAXWAITTIME.addCallback(RENEW_POOL);
         JEDISPOOLCONFIG_TESTONBORROW.addCallback(RENEW_POOL);
+        JEDISPOOLCONFIG_PASSWORD.addCallback(RENEW_POOL);
 
         initPool();
     }
@@ -79,7 +81,7 @@ public class RedisUtil {
         String redisUrls = JEDISPOOLCONFIG_URLS.get();
         for (String redisUrl : redisUrls.split(DEFAULT_REDIS_SEPARATOR)) {
             String[] redisUrlInfo = redisUrl.split(HOST_PORT_SEPARATOR);
-            jedisPoolList.add(new JedisPool(poolConfig, redisUrlInfo[0], Integer.parseInt(redisUrlInfo[1]), JEDISPOOLCONFIG_TIMEOUT.get()));
+            jedisPoolList.add(new JedisPool(poolConfig, redisUrlInfo[0], Integer.parseInt(redisUrlInfo[1]), JEDISPOOLCONFIG_TIMEOUT.get(), JEDISPOOLCONFIG_PASSWORD.get()));
         }
 
         jedisPoolsRef.set(jedisPoolList.toArray(new JedisPool[0]));
