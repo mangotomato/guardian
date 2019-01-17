@@ -29,7 +29,7 @@ Guardian has the following features:
 1. Flow control can be used to control the visited frequency of the API, the request frequency of the APP, and the request frequency of the user.  
 2. The time unit of flow control can be minutes, hours, and days.
 
-- **Request verification**  
+- **Request Verification**  
 
 1. Support parameter type, parameter value (range, enumeration, regular) check, invalid check will be directly rejected, to reduce the waste of resources caused by invalid requests to the backend.  
 
