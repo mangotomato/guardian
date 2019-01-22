@@ -55,6 +55,12 @@ public interface IGatewayFilterDAO {
     List<FilterInfo> getAllActiveFilters() throws Exception;
 
     /**
+     *
+     * @return all in-active filters
+     */
+    List<FilterInfo> getAllInActiveFilters() throws Exception;
+
+    /**
      * sets a filter and revision as active in a "canary"
      * @param filterId
      * @param revision
