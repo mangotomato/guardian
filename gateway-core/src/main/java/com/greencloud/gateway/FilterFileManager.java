@@ -7,9 +7,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * This class manages the directory polling for changes and new Groovy filters.
@@ -141,9 +139,24 @@ public class FilterFileManager {
      * @throws IllegalAccessException
      */
     void processGroovyFiles(List<File> aFiles) throws Exception, InstantiationException, IllegalAccessException {
-
         for (File file : aFiles) {
             FilterLoader.getInstance().putFilter(file);
+        }
+        removeInActiveFilter(aFiles);
+    }
+
+    void removeInActiveFilter(List<File> aFiles) {
+        Set<String> sNames = new HashSet<>(aFiles.size());
+        for (File file : aFiles) {
+            String sName = file.getAbsolutePath() + file.getName();
+            sNames.add(sName);
+        }
+        Collection<String> filterNames = FilterLoader.getInstance().getFilterKeys();
+        for (String filterName : filterNames) {
+            if (!sNames.contains(filterName)) {
+                // remove filter
+                FilterLoader.getInstance().removeFilter(filterName);
+            }
         }
     }
 

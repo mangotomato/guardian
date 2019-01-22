@@ -76,6 +76,20 @@ public class FilterLoader {
     }
 
     /**
+     * @return all filters
+     */
+    public Collection<GatewayFilter> getFilters() {
+        return filterRegistry.getAllFilters();
+    }
+
+    /**
+     * @return all filter keys
+     */
+    public Collection<String> getFilterKeys() {
+        return filterRegistry.getAllFilterKeys();
+    }
+
+    /**
      * Given source and name will compile and store the filter if it detects that the filter code has changed or
      * the filter doesn't exist. Otherwise it will return an instance of the requested GatewayFilter
      *
@@ -146,6 +160,15 @@ public class FilterLoader {
         }
 
         return false;
+    }
+
+    public void removeFilter(String sName) {
+        GatewayFilter filter = filterRegistry.get(sName);
+        if (filter != null) {
+            hashFiltersByType.remove(filter.filterType());
+            filterRegistry.remove(sName);
+            filterClassLastModified.remove(sName);
+        }
     }
 
     /**

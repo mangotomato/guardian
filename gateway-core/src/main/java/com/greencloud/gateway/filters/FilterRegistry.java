@@ -3,6 +3,7 @@ package com.greencloud.gateway.filters;
 import com.greencloud.gateway.GatewayFilter;
 
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -39,6 +40,10 @@ public class FilterRegistry {
 
     public Collection<GatewayFilter> getAllFilters() {
         return this.filters.values();
+    }
+
+    public Collection<String> getAllFilterKeys() {
+        return this.filters.keySet();
     }
 
 }

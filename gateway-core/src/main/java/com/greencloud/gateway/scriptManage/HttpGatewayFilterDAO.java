@@ -84,6 +84,27 @@ public class HttpGatewayFilterDAO implements IGatewayFilterDAO {
     }
 
     @Override
+    public List<FilterInfo> getAllInActiveFilters() throws Exception {
+        List<FilterInfo> list = Lists.newArrayList();
+        HttpGet method = new HttpGet(filterRepository.get() + "/inactive/" + applicationName);
+
+        CloseableHttpResponse response = httpclient.execute(method);
+
+        String body = EntityUtils.toString(response.getEntity());
+        JSONArray jsonArray = JSON.parseArray(body);
+
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONObject json = jsonArray.getJSONObject(i);
+
+            FilterInfo filter = JSON.toJavaObject(json, FilterInfo.class);
+
+            filter.setFilterCode(new String(Base64.decodeBase64(filter.getFilterCode().getBytes("utf-8")), "utf-8"));
+            list.add(filter);
+        }
+        return list;
+    }
+
+    @Override
     public List<String> getAllFilterIds() throws Exception {
         return null;
     }
