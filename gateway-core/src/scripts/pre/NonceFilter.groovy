@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author leejianhao
  */
-public class RAFilter extends GatewayFilter {
+public class NonceFilter extends GatewayFilter {
 
     private static final DynamicIntProperty TIMESTAMP_VALIDITY_MINUTES = DynamicPropertyFactory.getInstance()
             .getIntProperty(GatewayConstants.GATEWAY_RA_TIMESTAMP_VALIDITY_MINUTES, 15);
