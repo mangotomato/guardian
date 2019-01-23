@@ -83,6 +83,12 @@ public class GatewayFilterPoller {
 							for (FilterInfo filterInfo : filterSet.values()) {
 								doFilterCheck(filterInfo);
 							}
+
+							List<FilterInfo> inActiveScripts = GatewayFilterDAOFactory.getGatewayFilterDAO().getAllInActiveFilters();
+							for (FilterInfo filterInfo : inActiveScripts) {
+								deleteInActiveFilterFromDisk(filterInfo);
+							}
+
 							tran.setStatus(Transaction.SUCCESS);
 						}catch(Throwable t){
 							tran.setStatus(t);
@@ -146,6 +152,32 @@ public class GatewayFilterPoller {
 	public void stop(){
 		this.running = false;
 	}
+
+	private void deleteInActiveFilterFromDisk(FilterInfo deleteFilter) {
+		String filterType = deleteFilter.getFilterType();
+
+		String path = getFilterPath(filterType);
+
+		File f = new File(path, deleteFilter.getFilterName() + ".groovy");
+		if (f.exists()) {
+			f.delete();
+		}
+	}
+
+	private String getFilterPath(String filterType) {
+		String path = preFiltersPath.get();
+		if ("post".equals(filterType)) {
+			path = postFiltersPath.get();
+		} else if ("route".equals(filterType)) {
+			path = routeFiltersPath.get();
+		} else if ("error".equals(filterType)) {
+			path = errorFiltersPath.get();
+		} else if (!"pre".equals(filterType) && customFiltersPath.get() != null) {
+			path = customFiltersPath.get();
+		}
+		return path;
+	}
+
 	private void doFilterCheck(FilterInfo newFilter) throws IOException {
 		FilterInfo existFilter = runningFilters.get(newFilter.getFilterId());
 		if (existFilter == null || !existFilter.equals(newFilter)) {
@@ -158,16 +190,7 @@ public class GatewayFilterPoller {
 	private void writeFilterToDisk(FilterInfo newFilter) throws IOException {
 		String filterType = newFilter.getFilterType();
 
-		String path = preFiltersPath.get();
-		if ("post".equals(filterType)) {
-			path = postFiltersPath.get();
-		} else if ("route".equals(filterType)) {
-			path = routeFiltersPath.get();
-		} else if ("error".equals(filterType)) {
-			path = errorFiltersPath.get();
-		} else if (!"pre".equals(filterType) && customFiltersPath.get() != null) {
-			path = customFiltersPath.get();
-		}
+		String path = getFilterPath(filterType);
 
 		File f = new File(path, newFilter.getFilterName() + ".groovy");
 		FileWriter file = new FileWriter(f);

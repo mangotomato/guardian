@@ -262,6 +262,41 @@ public class JDBCGatewayFilterDAO implements IGatewayFilterDAO {
 	}
 
 	@Override
+	public List<FilterInfo> getAllInActiveFilters() throws Exception {
+		Connection connection = dataSource.getConnection();
+		PreparedStatement ps = null;
+		ResultSet r = null;
+
+		List<FilterInfo> list = Lists.newArrayList();
+
+		try{
+
+			connection.setAutoCommit(true);
+			ps = connection.prepareStatement(SQL + " where is_active = ?");
+			ps.setBoolean(1, false);
+
+			r = ps.executeQuery();
+			while(r.next()){
+				list.add(buildFilterInfo(r));
+			}
+
+		}finally{
+			try{
+				if( r != null){
+					r.close();
+				}
+
+				if(ps != null){
+					ps.close();
+				}
+			}finally{
+				connection.close();
+			}
+		}
+		return list;
+	}
+
+	@Override
 	public FilterInfo canaryFilter(String filterId, int revision) throws Exception {
 
 		Connection connection = dataSource.getConnection();

@@ -5,19 +5,53 @@
 ## Introduction
 
 We have the requirement for publishing our service to public more urgent as the rapid bussiness explosion. So, Guardian comes up.
-As a API gateway, guardian is a edge service, provide single entry to access backend service. Guardian designed for protecting backend service, to guarantee service reliability.
+As a API gateway, guardian is a edge service, provide single entry to access backend service. Guardian designed for protecting backend service.
+
+Guardian in chinese name is <code>郁垒神荼</code>[yù lǜ shēn shū].
 
 Guardian has the following features:
-- **API management**:  Guardian provide the web console to management API's lifecycle. You can define, release and downline a API.
-- **Dynamic routing**: Guardian actor as a reverse proxy, support dynamic routing according to your confs.
-- **Dynamic filters**:  Guardian supports dynamic load filters. For example, you can upload a new filter's source code, guardian able to poll the change, compile the source code, and plugin the filter to current filter's pipeline. Basicly, you can active/inactive a filter.
-- **Dynamic configuration**: Guardian integrate with ctrip's Apollo, you can easily change Guardian's state. For example, httpclient's Socket timeout, database confs etc.
-- **Ip access control**: Guardian integrate with alibaba's Sentinel, Sentinel provide the 'black and white ip list' control.
-- **Flow control**: Guardian integrate with alibaba's Sentinel, provide flow control.
-- **Rewrite**: Guardian will buffer request stream, So, you can checking, filter, transform the request body by defining rewrite rules.
-- **Botblocker**: Guardian provide a basic anti-reptile filter.
-- **Authentication**: Guardian supports AppKey and OpenID-Connect authetication.
-- **Real-time monitor**: Guardian integrate with meituan's Cat, you can real-time monitor Guardian's state. Also, Cat provide alarm support.
+- **API Lifecycle Management**  
+
+1. Support API define, release, downline.  
+2. Support API's version management, version rollback.  
+
+- **Dynamic Routing**  
+
+1. Support ant-style URL mapping, dynamic routing to origin server.    
+2. Support upstream healthcheck.      
+
+- **Dynamic Filters**  
+
+&nbsp;&nbsp;&nbsp;&nbsp;Support dynamic loading filter, no need to restart application.  
+
+- **Traffic Control**  
+
+1. Flow control can be used to control the visited frequency of the API, the request frequency of the APP, and the request frequency of the user.  
+2. The time unit of flow control can be minutes, hours, and days.
+
+- **Request Verification**  
+
+1. Support parameter type, parameter value (range, enumeration, regular) check, invalid check will be directly rejected, to reduce the waste of resources caused by invalid requests to the backend.  
+
+- **Data Transform**  
+
+&nbsp;&nbsp;&nbsp;&nbsp;Pre- and post-end data translation is implemented by configuring mapping rules.  
+- Support for data conversion of front-end requests.  
+- Support for data conversion that returns results. 
+
+- **Botblocker**  
+
+&nbsp;&nbsp;&nbsp;&nbsp;Provider a basic anti-replite filter.  
+
+- **Safety**
+
+1. Support AppKey, OpenID-Connect authentication, support HMAC (SHA-1, SHA-256) algorithm for signature.  
+2. Anti-attack, anti-injection, request anti-replay, request anti-tampering.  
+
+- **Real-time Monitor**  
+
+1. Provide visual API real-time monitoring.  
+2. Configurable warning mode (SMS, Email), subscribe to warning information.  
 
 ## Documentation
 
@@ -29,7 +63,7 @@ See the [中文文档](https://github.com/mangotomato/guardian/wiki/Guardian%E4%
 
 ## Design
 
-Guardian Adapted <a href="https://github.com/Netflix/zuul/wiki/How-it-Works">zuul</a>'s fiter design, below image shows zuul request lifecycle, filter is everywhere.
+Guardian Adapted <a href="https://github.com/Netflix/zuul/wiki/How-it-Works">zuul</a>'s filter design, below image shows zuul request lifecycle, filter is everywhere.
 <img src="https://github.com/mangotomato/uploads/blob/master/zuul_request_lifecycle.png" width="75%" height="75%" alt="zuul filter lifecycle">
 
 Guardin introduced the Servlet 3.0 asynchronous feature，which can hold more requests.
