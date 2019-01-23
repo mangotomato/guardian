@@ -84,11 +84,6 @@ public class GatewayFilterPoller {
 								doFilterCheck(filterInfo);
 							}
 
-							List<FilterInfo> inActiveScripts = GatewayFilterDAOFactory.getGatewayFilterDAO().getAllInActiveFilters();
-							for (FilterInfo filterInfo : inActiveScripts) {
-								deleteInActiveFilterFromDisk(filterInfo);
-							}
-
 							tran.setStatus(Transaction.SUCCESS);
 						}catch(Throwable t){
 							tran.setStatus(t);
@@ -116,6 +111,12 @@ public class GatewayFilterPoller {
 							tran.complete();
 						}
 					}
+
+					List<FilterInfo> inActiveScripts = GatewayFilterDAOFactory.getGatewayFilterDAO().getAllInActiveFilters();
+					for (FilterInfo filterInfo : inActiveScripts) {
+						deleteInActiveFilterFromDisk(filterInfo);
+					}
+
 				} catch (Throwable t) {
 					LOGGER.error("GatewayFilterPoller run error!", t);
 				} finally {
@@ -154,6 +155,12 @@ public class GatewayFilterPoller {
 	}
 
 	private void deleteInActiveFilterFromDisk(FilterInfo deleteFilter) {
+		FilterInfo existFilter = runningFilters.get(deleteFilter.getFilterId());
+		// 版本不同，不能删除
+		if (existFilter != null && existFilter.getRevision() != deleteFilter.getRevision()) {
+			return;
+		}
+
 		String filterType = deleteFilter.getFilterType();
 
 		String path = getFilterPath(filterType);
@@ -162,6 +169,7 @@ public class GatewayFilterPoller {
 		if (f.exists()) {
 			f.delete();
 		}
+
 	}
 
 	private String getFilterPath(String filterType) {

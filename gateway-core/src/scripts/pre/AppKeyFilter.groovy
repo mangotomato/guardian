@@ -1,24 +1,19 @@
-package com.greencloud.gateway.filters.pre;
+package com.greencloud.gateway.filters.pre
 
-import com.greencloud.gateway.GatewayFilter;
-import com.greencloud.gateway.constants.Constants;
-import com.greencloud.gateway.constants.HttpHeader;
-import com.greencloud.gateway.constants.SystemHeader;
-import com.greencloud.gateway.context.RequestContext;
-import com.greencloud.gateway.exception.GatewayException;
-import com.greencloud.gateway.util.HTTPRequestUtil;
-import com.greencloud.gateway.util.MessageDigestUtil;
-import com.greencloud.gateway.util.SignUtil;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import com.google.common.base.Strings
+import com.greencloud.gateway.GatewayFilter
+import com.greencloud.gateway.constants.Constants
+import com.greencloud.gateway.constants.HttpHeader
+import com.greencloud.gateway.constants.SystemHeader
+import com.greencloud.gateway.context.RequestContext
+import com.greencloud.gateway.exception.GatewayException
+import com.greencloud.gateway.util.HTTPRequestUtil
+import com.greencloud.gateway.util.MessageDigestUtil
+import com.greencloud.gateway.util.SignUtil
+import org.apache.commons.io.IOUtils
+import org.apache.commons.lang.StringUtils
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest
 
 /**
  * @author leejianhao
@@ -127,7 +122,11 @@ public class AppKeyFilter extends GatewayFilter {
     }
 
     private List<String> getCustomSignHeaders(HttpServletRequest request) {
-        String signatureHeaderString= request.getHeader(SystemHeader.X_GW_SIGNATURE_HEADERS);
+        String signatureHeaderString = request.getHeader(SystemHeader.X_GW_SIGNATURE_HEADERS);
+        if (Strings.isNullOrEmpty(signatureHeaderString)) {
+            return Collections.emptyList();
+        }
+
         String[] signatureHeaders = StringUtils.split(signatureHeaderString, ',');
         return Arrays.asList(signatureHeaders);
     }

@@ -1,5 +1,6 @@
 package com.greencloud.gateway.filters.pre;
 
+import com.google.common.base.Strings;
 import com.greencloud.gateway.GatewayFilter;
 import com.greencloud.gateway.constants.Constants;
 import com.greencloud.gateway.constants.HttpHeader;
@@ -129,6 +130,9 @@ public class AppKeyFilter extends GatewayFilter {
 
     private List<String> getCustomSignHeaders(HttpServletRequest request) {
         String signatureHeaderString= request.getHeader(SystemHeader.X_GW_SIGNATURE_HEADERS);
+        if (Strings.isNullOrEmpty(signatureHeaderString)) {
+            return Collections.emptyList();
+        }
         String[] signatureHeaders = StringUtils.split(signatureHeaderString, ',');
         return Arrays.asList(signatureHeaders);
     }
