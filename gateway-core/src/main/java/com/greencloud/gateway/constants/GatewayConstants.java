@@ -82,6 +82,8 @@ public class GatewayConstants {
     public static final String REDIS_JEDISPOOLCONFIG_TESTONBORROW = "redis.jedisPoolConfig.testOnBorrow";
     // 密码
     public static final String REDIS_JEDISPOOLCONFIG_PASSWORD = "redis.jedisPoolConfig.password";
+    // 数据库
+    public static final String REDIS_JEDISPOOLCONFIG_DATABASE = "redis.jedisPoolConfig.database";
 
     /**
      * http client
