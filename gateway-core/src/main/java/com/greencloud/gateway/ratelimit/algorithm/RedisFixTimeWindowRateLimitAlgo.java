@@ -91,39 +91,37 @@ public class RedisFixTimeWindowRateLimitAlgo implements RateLimitAlgo {
 	}
 
 	@Override
-	public void tryAcquire(List<RateLimitRule> rules) throws ThrottledException {
+	public void tryAcquire(RateLimitRule rule) throws ThrottledException {
 		List<String> keys = Lists.newLinkedList();
 		List<String> params = Lists.newLinkedList();
 
 		RequestContext context = RequestContext.getCurrentContext();
 
 		try {
-			for (RateLimitRule rule : rules) {
-				keys.add(rule.getApi() + ":" + rule.getTimeUnit().name());
-				keys.add(context.getClient() + ":" + rule.getApi() + ":" + rule.getTimeUnit().name());
-				keys.add(context.getClient() + ":" + context.getApp() + ":" + rule.getApi() + ":" + rule.getTimeUnit().name());
+			keys.add(rule.getApi() + ":" + rule.getTimeUnit().name());
+			keys.add(context.getClient() + ":" + rule.getApi() + ":" + rule.getTimeUnit().name());
+			keys.add(context.getClient() + ":" + context.getApp() + ":" + rule.getApi() + ":" + rule.getTimeUnit().name());
 
-				params.add(String.valueOf(rule.getLimit()));
-				params.add(String.valueOf(rule.getLimitClient()));
-				params.add(String.valueOf(rule.getLimitAPP()));
+			params.add(String.valueOf(rule.getLimit()));
+			params.add(String.valueOf(rule.getLimitClient()));
+			params.add(String.valueOf(rule.getLimitAPP()));
 
-				long result = (Long) RedisUtil.getInstance().evalsha(mapping.get(rule.getTimeUnit()), keys, params);
+			long result = (Long) RedisUtil.getInstance().evalsha(mapping.get(rule.getTimeUnit()), keys, params);
 
-				/**
-				 * -1: api throttled
-				 * -2: client throttled
-				 * -3: app throttled
-				 */
-				if (result < 0) {
-					if (result == -1) {
-						throw new ThrottledException("API throttled");
-					}
-					if (result == -2) {
-						throw new ThrottledException("Client throttled");
-					}
-					if (result == -3) {
-						throw new ThrottledException("APP throttled");
-					}
+			/**
+			 * -1: api throttled
+			 * -2: client throttled
+			 * -3: app throttled
+			 */
+			if (result < 0) {
+				if (result == -1) {
+					throw new ThrottledException("API throttled");
+				}
+				if (result == -2) {
+					throw new ThrottledException("Client throttled");
+				}
+				if (result == -3) {
+					throw new ThrottledException("APP throttled");
 				}
 			}
 		} catch (JedisNoScriptException e) {

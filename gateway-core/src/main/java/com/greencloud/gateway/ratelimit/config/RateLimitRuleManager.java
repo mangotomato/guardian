@@ -1,6 +1,5 @@
 package com.greencloud.gateway.ratelimit.config;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,7 +10,7 @@ import java.util.concurrent.TimeUnit;
  * @author leejianhao
  */
 public class RateLimitRuleManager {
-	private static final ConcurrentMap<String, List<RateLimitRule>> rateLimitRules = new ConcurrentHashMap<>();
+	private static final ConcurrentMap<String, RateLimitRule> rateLimitRules = new ConcurrentHashMap<>();
 
 	static {
 		RateLimitRule rule = new RateLimitRule();
@@ -21,16 +20,16 @@ public class RateLimitRuleManager {
 		rule.setTimeUnit(TimeUnit.MINUTES);
 		rule.setApi("/s/weather");
 
-		List<RateLimitRule> rules = new ArrayList<>();
-		rules.add(rule);
-
-		rateLimitRules.put("/s/weather", rules);
+		rateLimitRules.put("/s/weather", rule);
 	}
 
-	public static void loadRules() {
+	public static void loadRules(List<RateLimitRule> rules) {
+		for (RateLimitRule rateLimitRule : rules) {
+			rateLimitRules.put(rateLimitRule.getApi(), rateLimitRule);
+		}
 	}
 
-	public static Map<String, List<RateLimitRule>> getRules() {
+	public static Map<String, RateLimitRule> getRules() {
 		return rateLimitRules;
 	}
 }

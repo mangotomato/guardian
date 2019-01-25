@@ -2,8 +2,6 @@ package com.greencloud.gateway.ratelimit.config;
 
 import java.util.concurrent.TimeUnit;
 
-import static java.util.concurrent.TimeUnit.MINUTES;
-
 /**
  * 流控规则
  *<pre>
@@ -35,6 +33,17 @@ public class RateLimitRule {
 	 * 单位 （支持秒、分钟、小时、天）
 	 */
 	private TimeUnit timeUnit = TimeUnit.SECONDS;
+
+	public RateLimitRule() {
+	}
+
+	public RateLimitRule(String api, int limit, int limitClient, int limitAPP, TimeUnit timeUnit) {
+		this.api = api;
+		this.limit = limit;
+		this.limitClient = limitClient;
+		this.limitAPP = limitAPP;
+		this.timeUnit = timeUnit;
+	}
 
 	public TimeUnit getTimeUnit() {
 		return timeUnit;

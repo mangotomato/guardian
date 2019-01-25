@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface RateLimitAlgo {
 
-	void tryAcquire(List<RateLimitRule> rules) throws ThrottledException;
+	void tryAcquire(RateLimitRule rule) throws ThrottledException;
 }

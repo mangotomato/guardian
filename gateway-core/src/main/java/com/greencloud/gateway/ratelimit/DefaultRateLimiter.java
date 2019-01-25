@@ -8,7 +8,6 @@ import com.greencloud.gateway.ratelimit.config.RateLimitRuleManager;
 import com.netflix.config.DynamicPropertyFactory;
 import com.netflix.config.DynamicStringProperty;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,12 +22,12 @@ public class DefaultRateLimiter implements RateLimiter {
 	public void entry() throws ThrottledException {
 
 		// API对应的限流规则
-		Map<String /* API */, List<RateLimitRule>> rules = RateLimitRuleManager.getRules();
+		Map<String /* API */, RateLimitRule> rules = RateLimitRuleManager.getRules();
 
 		// 根据API查找对应流控规则
 		String api = RequestContext.getCurrentContext().getAPIIdentity();
-		List<RateLimitRule> currentRules = rules.get(api);
-		if (currentRules == null || currentRules.isEmpty()) {
+		RateLimitRule currentRules = rules.get(api);
+		if (currentRules == null) {
 			return;
 		}
 
