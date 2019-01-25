@@ -106,6 +106,11 @@ public class GatewayConstants {
     public static final String IGNORED_HEADERS = "ignoredHeaders";
 
     /**
+     * flow rules
+     */
+    public static final String GATEWAY_FLOW_RULE_POLLER_ENABLED = "gateway.flow.rule.poller.enabled";
+    public static final String GATEWAY_FLOW_RULE_INTERVAL = "gateway.flow.rule.poller.interval";
+    /**
      * Prevent instantiation
      */
     private GatewayConstants() {
