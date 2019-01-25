@@ -77,7 +77,7 @@ public class NonceFilter extends GatewayFilter {
     }
 
     private void save(String key) {
-        RedisUtil.getInstance().setex(key, TIMESTAMP_VALIDITY_MINUTES.get() * 60*1000, "");
+        RedisUtil.getInstance().setex(key, TIMESTAMP_VALIDITY_MINUTES.get() * 60, "");
     }
 
     private String getKey(String appKey, String api, String nonce) {
