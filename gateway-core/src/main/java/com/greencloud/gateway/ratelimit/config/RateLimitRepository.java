@@ -1,4 +1,4 @@
-package com.greencloud.gateway.ratelimit;
+package com.greencloud.gateway.ratelimit.config;
 
 import com.greencloud.gateway.ratelimit.algorithm.RateLimitAlgo;
 import com.greencloud.gateway.ratelimit.algorithm.RedisFixTimeWindowRateLimitAlgo;
@@ -16,6 +16,10 @@ public enum RateLimitRepository {
 
 	public RateLimitAlgo getAlgo() {
 		return this.algo;
+	}
+
+	public static void main(String[] args) {
+		RateLimitRepository.valueOf("REDIS");
 	}
 }
 

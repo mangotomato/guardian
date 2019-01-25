@@ -10,6 +10,7 @@ import com.greencloud.gateway.groovy.GroovyCompiler;
 import com.greencloud.gateway.groovy.GroovyFileFilter;
 import com.greencloud.gateway.scriptManage.GatewayFilterPoller;
 import com.greencloud.gateway.util.IPUtil;
+import com.greencloud.gateway.util.RedisUtil;
 import com.netflix.appinfo.*;
 import com.netflix.config.*;
 import com.netflix.discovery.DefaultEurekaClientConfig;
@@ -25,6 +26,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Map;
+
+import static com.greencloud.gateway.ratelimit.algorithm.RedisFixTimeWindowRateLimitAlgo.*;
 
 /**
  * @author leejianhao
@@ -66,6 +69,7 @@ public class StartServer implements ServletContextListener {
         loadConfiguration();
         configLog();
         registerEureka();
+
     }
 
     @Override
@@ -74,7 +78,9 @@ public class StartServer implements ServletContextListener {
             //initInfoBoard();
             //initMonitor();
             initGateway();
+            initFlowRule();
             updateInstanceStatusToEureka();
+
         } catch (Exception e) {
             logger.error("Error while initializing gateway.", e);
             throw new RuntimeException(e);
@@ -105,6 +111,13 @@ public class StartServer implements ServletContextListener {
         //load filters in DB
         startGatewayFilterPoller();
         logger.info("Groovy Filter file manager started");
+    }
+
+    private void initFlowRule() {
+        RedisUtil.getInstance().scriptLoad(REDIS_LIMIT_SCRIPT_SECOND);
+        RedisUtil.getInstance().scriptLoad(REDIS_LIMIT_SCRIPT_MINUTE);
+        RedisUtil.getInstance().scriptLoad(REDIS_LIMIT_SCRIPT_HOUR);
+        RedisUtil.getInstance().scriptLoad(REDIS_LIMIT_SCRIPT_DAY);
     }
 
     private void updateInstanceStatusToEureka() {

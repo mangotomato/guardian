@@ -273,6 +273,30 @@ public class RequestContext extends ConcurrentHashMap<String, Object> {
         return (String)get("routeUrl");
     }
 
+    public void setAPIIdentity(String identity) {
+        set("apiIdentity", identity);
+    }
+
+    public String getAPIIdentity() {
+        return (String)get("apiIdentity");
+    }
+
+    public void setClient(String client) {
+        set("client", client);
+    }
+
+    public String getClient() {
+        return (String)get("client");
+    }
+
+    public void setApp(String app) {
+        set("app", app);
+    }
+
+    public String getApp() {
+        return (String)get("app");
+    }
+
     /**
      * appends filter name and status to the filter execution history for the
      * current request

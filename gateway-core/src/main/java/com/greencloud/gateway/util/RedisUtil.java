@@ -3,6 +3,7 @@ package com.greencloud.gateway.util;
 import static com.greencloud.gateway.constants.GatewayConstants.*;
 import static com.greencloud.gateway.constants.GatewayConstants.REDIS_JEDISPOOLCONFIG_DATABASE;
 
+import com.google.common.collect.Lists;
 import com.netflix.config.DynamicBooleanProperty;
 import com.netflix.config.DynamicIntProperty;
 import com.netflix.config.DynamicPropertyFactory;
@@ -247,6 +248,24 @@ public class RedisUtil {
             @Override
             public Map<String, String> execute(Jedis jedis) {
                 return jedis.hgetAll(key);
+            }
+        });
+    }
+
+    public Object evalsha(final String sha1, final List keys, final List params) {
+        return execute(sha1, new HashRedisExecutor<Object>() {
+            @Override
+            public Object execute(Jedis jedis) {
+                return jedis.evalsha(sha1, keys, params);
+            }
+        });
+    }
+
+    public Object scriptLoad(String script) {
+        return execute(script, new HashRedisExecutor<Object>() {
+            @Override
+            public Object execute(Jedis jedis) {
+                return jedis.scriptLoad(script);
             }
         });
     }
