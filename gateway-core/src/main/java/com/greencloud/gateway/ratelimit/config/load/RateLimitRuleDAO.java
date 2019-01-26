@@ -1,6 +1,7 @@
 package com.greencloud.gateway.ratelimit.config.load;
 
 import com.google.common.collect.Lists;
+import com.greencloud.gateway.common.datasource.DataSourceHolder;
 import com.greencloud.gateway.ratelimit.config.RateLimitRule;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -17,9 +18,12 @@ public class RateLimitRuleDAO implements IRateLimitRuleDAO {
 
     private String sql;
     private HikariDataSource dataSource;
+
     public  RateLimitRuleDAO() {
-        sql = "select a.api_id, a.api, r.limit, r.limit_client, r.limit_app, r.time_unit from api_flow_rule a left join flow_rule r on a.flow_rule_id = r.id";
+        dataSource = (HikariDataSource) DataSourceHolder.getInstance().getDataSource();
+        sql = "select api.path, r.limit, r.limit_client, r.limit_app, r.time_unit from api_flow_rule a left join flow_rule r on a.flow_rule_id = r.id left join api on a.api_id = api.id";
     }
+
     @Override
     public List<RateLimitRule> getAllRelation() throws Exception {
         Connection connection = dataSource.getConnection();
@@ -32,7 +36,6 @@ public class RateLimitRuleDAO implements IRateLimitRuleDAO {
 
             connection.setAutoCommit(true);
             ps = connection.prepareStatement(sql);
-            ps.setString(1, "T");
 
             r = ps.executeQuery();
             while(r.next()){

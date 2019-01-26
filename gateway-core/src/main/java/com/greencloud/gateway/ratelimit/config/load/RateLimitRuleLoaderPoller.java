@@ -27,6 +27,8 @@ public class RateLimitRuleLoaderPoller {
 
     private volatile boolean running = true;
 
+    private IRateLimitRuleDAO dao;
+
     private Thread loaderThread = new Thread("GatewayFilterPoller") {
 
         @Override
@@ -37,24 +39,19 @@ public class RateLimitRuleLoaderPoller {
                         continue;
                     }
 
+                    sleep(pollerInterval.get());
+
                     loadRateLimitRule();
 
                 } catch (Throwable t) {
                     logger.error("RateLimitRuleLoaderPoller run error!", t);
-                } finally {
-                    try {
-                        sleep(pollerInterval.get());
-                    } catch (InterruptedException e) {
-                        logger.error("RateLimitRuleLoaderPoller sleep error!", e);
-                    }
                 }
             }
         }
     };
 
-    private void loadRateLimitRule() {
+    public void loadRateLimitRule() {
         try {
-            IRateLimitRuleDAO dao = new RateLimitRuleDAO();
             List<RateLimitRule> rules = dao.getAllRelation();
             RateLimitRuleManager.loadRules(rules);
             logger.info("Rate limit rule loaded");
@@ -64,6 +61,8 @@ public class RateLimitRuleLoaderPoller {
     }
 
     private RateLimitRuleLoaderPoller() {
+        dao = new RateLimitRuleDAO();
+        loadRateLimitRule();
         loaderThread.start();
     }
 
