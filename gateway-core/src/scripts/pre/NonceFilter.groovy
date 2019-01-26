@@ -43,7 +43,7 @@ public class NonceFilter extends GatewayFilter {
 
     @Override
     public boolean shouldFilter() {
-        return !RequestContext.getCurrentContext().isHealthCheckRequest() && rAEnabled();
+        return !RequestContext.getCurrentContext().isHealthCheckRequest() && nonceEnabled();
     }
 
     @Override
@@ -88,7 +88,7 @@ public class NonceFilter extends GatewayFilter {
         return RedisUtil.getInstance().exists(key);
     }
 
-    private boolean rAEnabled() {
+    private boolean nonceEnabled() {
         HttpServletRequest request = RequestContext.getCurrentContext().getRequest();
         String appKey = request.getHeader(SystemHeader.X_GW_KEY);
         String timestamp = request.getHeader(SystemHeader.X_GW_TIMESTAMP);
