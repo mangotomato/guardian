@@ -29,7 +29,7 @@ public class RateLimitRuleLoaderPoller {
 
     private IRateLimitRuleDAO dao;
 
-    private Thread loaderThread = new Thread("GatewayFilterPoller") {
+    private Thread loaderThread = new Thread("RateLimitRuleLoaderPoller") {
 
         @Override
         public void run() {
