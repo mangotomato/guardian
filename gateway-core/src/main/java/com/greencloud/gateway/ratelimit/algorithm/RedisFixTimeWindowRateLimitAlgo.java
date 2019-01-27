@@ -6,8 +6,8 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.greencloud.gateway.context.RequestContext;
 import com.greencloud.gateway.ratelimit.RateLimiter;
-import com.greencloud.gateway.ratelimit.config.RateLimitRule;
 import com.greencloud.gateway.ratelimit.ThrottledException;
+import com.greencloud.gateway.ratelimit.config.RateLimitRule;
 import com.greencloud.gateway.util.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +74,7 @@ public class RedisFixTimeWindowRateLimitAlgo implements RateLimitAlgo {
 	public static final String REDIS_LIMIT_SCRIPT_HOUR = String.format(REDIS_LIMIT_SCRIPT, 3600, 3600, 3600);
 	public static final String REDIS_LIMIT_SCRIPT_DAY = String.format(REDIS_LIMIT_SCRIPT, 86400, 86400, 86400);
 
-	/* Redis cache for Lua script. */
+	/** Redis cache for Lua script. */
 	public static final String REDIS_LIMIT_SCRIPT_SHA1_SECOND = sha1(REDIS_LIMIT_SCRIPT_SECOND);
 	public static final String REDIS_LIMIT_SCRIPT_SHA1_MINUTE = sha1(REDIS_LIMIT_SCRIPT_MINUTE);
 	public static final String REDIS_LIMIT_SCRIPT_SHA1_HOUR = sha1(REDIS_LIMIT_SCRIPT_HOUR);

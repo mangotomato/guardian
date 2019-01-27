@@ -1,10 +1,8 @@
 package com.greencloud.gateway.ratelimit.algorithm;
 
 
-import com.greencloud.gateway.ratelimit.config.RateLimitRule;
 import com.greencloud.gateway.ratelimit.ThrottledException;
-
-import java.util.List;
+import com.greencloud.gateway.ratelimit.config.RateLimitRule;
 
 public interface RateLimitAlgo {
 
