@@ -1,7 +1,9 @@
 package com.greencloud.gateway.util;
 
 import static com.greencloud.gateway.constants.GatewayConstants.*;
+import static com.greencloud.gateway.constants.GatewayConstants.REDIS_JEDISPOOLCONFIG_DATABASE;
 
+import com.google.common.collect.Lists;
 import com.netflix.config.DynamicBooleanProperty;
 import com.netflix.config.DynamicIntProperty;
 import com.netflix.config.DynamicPropertyFactory;
@@ -46,6 +48,8 @@ public class RedisUtil {
     private static final DynamicIntProperty JEDISPOOLCONFIG_MINIDLE = DynamicPropertyFactory.getInstance().getIntProperty(REDIS_JEDISPOOLCONFIG_MINIDLE, 0);
     private static final DynamicIntProperty JEDISPOOLCONFIG_MAXWAITTIME = DynamicPropertyFactory.getInstance().getIntProperty(REDIS_JEDISPOOLCONFIG_MAXWAITTIME, -1);
     private static final DynamicBooleanProperty JEDISPOOLCONFIG_TESTONBORROW = DynamicPropertyFactory.getInstance().getBooleanProperty(REDIS_JEDISPOOLCONFIG_TESTONBORROW, true);
+    private static final DynamicStringProperty JEDISPOOLCONFIG_PASSWORD = DynamicPropertyFactory.getInstance().getStringProperty(REDIS_JEDISPOOLCONFIG_PASSWORD, "");
+    private static final DynamicIntProperty JEDISPOOLCONFIG_DATABASE = DynamicPropertyFactory.getInstance().getIntProperty(REDIS_JEDISPOOLCONFIG_DATABASE, 0);
 
     private static final RedisUtil INSTANCE = new RedisUtil();
 
@@ -57,6 +61,8 @@ public class RedisUtil {
         JEDISPOOLCONFIG_MINIDLE.addCallback(RENEW_POOL);
         JEDISPOOLCONFIG_MAXWAITTIME.addCallback(RENEW_POOL);
         JEDISPOOLCONFIG_TESTONBORROW.addCallback(RENEW_POOL);
+        JEDISPOOLCONFIG_PASSWORD.addCallback(RENEW_POOL);
+        JEDISPOOLCONFIG_DATABASE.addCallback(RENEW_POOL);
 
         initPool();
     }
@@ -79,7 +85,8 @@ public class RedisUtil {
         String redisUrls = JEDISPOOLCONFIG_URLS.get();
         for (String redisUrl : redisUrls.split(DEFAULT_REDIS_SEPARATOR)) {
             String[] redisUrlInfo = redisUrl.split(HOST_PORT_SEPARATOR);
-            jedisPoolList.add(new JedisPool(poolConfig, redisUrlInfo[0], Integer.parseInt(redisUrlInfo[1]), JEDISPOOLCONFIG_TIMEOUT.get()));
+            jedisPoolList.add(new JedisPool(poolConfig, redisUrlInfo[0], Integer.parseInt(redisUrlInfo[1]),
+                    JEDISPOOLCONFIG_TIMEOUT.get(), JEDISPOOLCONFIG_PASSWORD.get(), JEDISPOOLCONFIG_DATABASE.get()));
         }
 
         jedisPoolsRef.set(jedisPoolList.toArray(new JedisPool[0]));
@@ -241,6 +248,24 @@ public class RedisUtil {
             @Override
             public Map<String, String> execute(Jedis jedis) {
                 return jedis.hgetAll(key);
+            }
+        });
+    }
+
+    public Object evalsha(final String sha1, final List keys, final List params) {
+        return execute(sha1, new HashRedisExecutor<Object>() {
+            @Override
+            public Object execute(Jedis jedis) {
+                return jedis.evalsha(sha1, keys, params);
+            }
+        });
+    }
+
+    public Object scriptLoad(String script) {
+        return execute(script, new HashRedisExecutor<Object>() {
+            @Override
+            public Object execute(Jedis jedis) {
+                return jedis.scriptLoad(script);
             }
         });
     }

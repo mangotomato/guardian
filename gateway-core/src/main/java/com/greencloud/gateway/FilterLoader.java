@@ -40,7 +40,8 @@ public class FilterLoader {
 //        filterRegistry.put("mockFilter", new MockFilter());
 //        filterRegistry.put("sentinelFilter", new SentinelFilter());
 //        filterRegistry.put("appKeyFilter", new AppKeyFilter());
-//        filterRegistry.put("raFilter", new RAFilter());
+//        filterRegistry.put("nonceFilter", new NonceFilter());
+        filterRegistry.put("flowFilter", new FlowFilter());
     }
 
     /**

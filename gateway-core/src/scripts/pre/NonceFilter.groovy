@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author leejianhao
  */
-public class RAFilter extends GatewayFilter {
+public class NonceFilter extends GatewayFilter {
 
     private static final DynamicIntProperty TIMESTAMP_VALIDITY_MINUTES = DynamicPropertyFactory.getInstance()
             .getIntProperty(GatewayConstants.GATEWAY_RA_TIMESTAMP_VALIDITY_MINUTES, 15);
@@ -43,7 +43,7 @@ public class RAFilter extends GatewayFilter {
 
     @Override
     public boolean shouldFilter() {
-        return !RequestContext.getCurrentContext().isHealthCheckRequest() && rAEnabled();
+        return !RequestContext.getCurrentContext().isHealthCheckRequest() && nonceEnabled();
     }
 
     @Override
@@ -77,7 +77,7 @@ public class RAFilter extends GatewayFilter {
     }
 
     private void save(String key) {
-        RedisUtil.getInstance().setex(key, TIMESTAMP_VALIDITY_MINUTES.get() * 60*1000, "");
+        RedisUtil.getInstance().setex(key, TIMESTAMP_VALIDITY_MINUTES.get() * 60, "");
     }
 
     private String getKey(String appKey, String api, String nonce) {
@@ -88,7 +88,7 @@ public class RAFilter extends GatewayFilter {
         return RedisUtil.getInstance().exists(key);
     }
 
-    private boolean rAEnabled() {
+    private boolean nonceEnabled() {
         HttpServletRequest request = RequestContext.getCurrentContext().getRequest();
         String appKey = request.getHeader(SystemHeader.X_GW_KEY);
         String timestamp = request.getHeader(SystemHeader.X_GW_TIMESTAMP);

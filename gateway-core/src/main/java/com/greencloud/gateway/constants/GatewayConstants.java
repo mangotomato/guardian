@@ -80,6 +80,10 @@ public class GatewayConstants {
     public static final String REDIS_JEDISPOOLCONFIG_MAXWAITTIME = "redis.jedisPoolConfig.maxWaitTime";
     // 在borrow一个jedis实例时，是否提前进行validate操作
     public static final String REDIS_JEDISPOOLCONFIG_TESTONBORROW = "redis.jedisPoolConfig.testOnBorrow";
+    // 密码
+    public static final String REDIS_JEDISPOOLCONFIG_PASSWORD = "redis.jedisPoolConfig.password";
+    // 数据库
+    public static final String REDIS_JEDISPOOLCONFIG_DATABASE = "redis.jedisPoolConfig.database";
 
     /**
      * http client
@@ -101,6 +105,11 @@ public class GatewayConstants {
 
     public static final String IGNORED_HEADERS = "ignoredHeaders";
 
+    /**
+     * flow rules
+     */
+    public static final String GATEWAY_FLOW_RULE_POLLER_ENABLED = "gateway.flow.rule.poller.enabled";
+    public static final String GATEWAY_FLOW_RULE_INTERVAL = "gateway.flow.rule.poller.interval";
     /**
      * Prevent instantiation
      */

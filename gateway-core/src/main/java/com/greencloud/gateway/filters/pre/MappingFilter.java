@@ -6,6 +6,7 @@ import com.greencloud.gateway.GatewayFilter;
 import com.greencloud.gateway.common.ant.AntPathMatcher;
 import com.greencloud.gateway.common.ant.PathMatcher;
 import com.greencloud.gateway.constants.GatewayConstants;
+import com.greencloud.gateway.constants.SystemHeader;
 import com.greencloud.gateway.context.RequestContext;
 import com.greencloud.gateway.exception.GatewayException;
 import com.netflix.config.DynamicPropertyFactory;
@@ -170,6 +171,9 @@ public class MappingFilter extends GatewayFilter {
 
         String routeUrl = server + path + (request.getQueryString() == null ? "" : "?" + request.getQueryString());
         RequestContext.getCurrentContext().setRouteUrl(routeUrl);
+        RequestContext.getCurrentContext().setApp(getApp());
+        RequestContext.getCurrentContext().setAPIIdentity(path);
+        RequestContext.getCurrentContext().setClient("default");
 
         return null;
     }
@@ -198,6 +202,13 @@ public class MappingFilter extends GatewayFilter {
         }
 
         return routesTableRef.get().get(path);
+    }
+
+    private String getApp() {
+        RequestContext context = RequestContext.getCurrentContext();
+        HttpServletRequest request = context.getRequest();
+        String app = request.getHeader(SystemHeader.X_GW_KEY);
+        return app;
     }
 
 }
