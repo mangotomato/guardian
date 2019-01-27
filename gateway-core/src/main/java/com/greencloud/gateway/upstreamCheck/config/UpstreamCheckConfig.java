@@ -20,7 +20,7 @@ public class UpstreamCheckConfig {
     private int fallCount;
 
     /**
-     * check请求上升多下，标记upstream为up状态
+     * check请求上升多少，标记upstream为up状态
      */
     private int riseCount;
 
