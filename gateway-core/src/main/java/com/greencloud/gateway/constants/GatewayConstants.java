@@ -96,8 +96,8 @@ public class GatewayConstants {
     /**
      * filters
      */
-    public static final String GATEWAY_RA_ENABLE = "gateway.ra.enable";
-    public static final String GATEWAY_RA_TIMESTAMP_VALIDITY_MINUTES = "ra.timestamp_validity_minutes";
+    public static final String GATEWAY_NONCE_ENABLE = "gateway.nonce.enable";
+    public static final String GATEWAY_NONCE_TIMESTAMP_VALIDITY_MINUTES = "gateway.nonce.timestamp_validity_minutes";
     public static final String GATEWAY_ROUTES_TABLE = "gateway.routes.table";
 
     public static final String DEFAULT_CONTENT_TYPE = "application/json;charset=utf-8";

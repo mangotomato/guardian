@@ -21,10 +21,10 @@ import javax.servlet.http.HttpServletRequest;
 public class NonceFilter extends GatewayFilter {
 
     private static final DynamicIntProperty TIMESTAMP_VALIDITY_MINUTES = DynamicPropertyFactory.getInstance()
-            .getIntProperty(GatewayConstants.GATEWAY_RA_TIMESTAMP_VALIDITY_MINUTES, 15);
+            .getIntProperty(GatewayConstants.GATEWAY_NONCE_TIMESTAMP_VALIDITY_MINUTES, 15);
 
     private static final DynamicBooleanProperty RA_ENABLE = DynamicPropertyFactory.getInstance()
-            .getBooleanProperty(GatewayConstants.GATEWAY_RA_ENABLE, false);
+            .getBooleanProperty(GatewayConstants.GATEWAY_NONCE_ENABLE, false);
 
     /**
      * appKey_api_timestamp (默认，15分钟内，appKey, api, nonce 不能重复）
