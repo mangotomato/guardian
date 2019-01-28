@@ -1,14 +1,19 @@
 package com.greencloud.gateway.filters.pre;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.greencloud.gateway.GatewayFilter;
 import com.greencloud.gateway.common.ant.AntPathMatcher;
 import com.greencloud.gateway.common.ant.PathMatcher;
-import com.greencloud.gateway.constants.GatewayConstants
+import com.greencloud.gateway.constants.GatewayConstants;
 import com.greencloud.gateway.constants.SystemHeader;
 import com.greencloud.gateway.context.RequestContext;
 import com.greencloud.gateway.exception.GatewayException;
+import com.greencloud.gateway.upstreamCheck.UpStreamCheckListener;
+import com.greencloud.gateway.upstreamCheck.UpstreamCheck;
+import com.greencloud.gateway.upstreamCheck.config.Status;
+import com.netflix.config.DynamicBooleanProperty;
 import com.netflix.config.DynamicPropertyFactory;
 import com.netflix.config.DynamicStringProperty;
 import org.apache.commons.lang.StringUtils;
@@ -20,19 +25,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author leejianhao
  */
-public class MappingFilter extends GatewayFilter {
+public class MappingFilter extends GatewayFilter implements UpStreamCheckListener {
 
-    private static Logger logger = LoggerFactory.getLogger(MappingFilter.class);
+    private static Logger logger = LoggerFactory.getLogger(com.greencloud.gateway.filters.pre.MappingFilter.class);
 
     /**
      * /s/** = [http://api.ihotel.cn,http://api.ihotel.cn]
      */
-    private static final AtomicReference<Map<String, List<String>>> serverRef = new AtomicReference<>(Maps.newHashMap());
+    private static final AtomicReference<Map<String /* service group */, List<String>>> serverRef = new AtomicReference<>(Maps.newHashMap());
+    private static final AtomicReference<Map<String /* service group */, List<String>>> activeServerRef = new AtomicReference<>(Maps.newHashMap());
     /**
      * /s/** = [stripPrefix=false,config=configValue]
      */
@@ -51,6 +59,9 @@ public class MappingFilter extends GatewayFilter {
     private static final DynamicStringProperty ROUTES_TABLE = DynamicPropertyFactory.getInstance()
             .getStringProperty(GatewayConstants.GATEWAY_ROUTES_TABLE, null);
 
+    private static final DynamicBooleanProperty UPSTREAM_CHECK_ENABLE = DynamicPropertyFactory.getInstance()
+            .getBooleanProperty(GatewayConstants.GATEWAY_UPSTREAM_CHECK_ENABLE, false);
+
     private static final PathMatcher matcher;
 
     static {
@@ -62,8 +73,41 @@ public class MappingFilter extends GatewayFilter {
             @Override
             public void run() {
                 buildRoutesTable();
+                // Set upstream check servers
+                setUpStreamCheckServer();
             }
         });
+
+        if (UPSTREAM_CHECK_ENABLE.get()) {
+            startUpStreamCheck();
+        }
+
+        UPSTREAM_CHECK_ENABLE.addCallback(new Runnable() {
+            @Override
+            public void run() {
+                if (UPSTREAM_CHECK_ENABLE.get()) {
+                    startUpStreamCheck();
+                } else {
+                    stopUpStreamCheck();
+                }
+            }
+        });
+    }
+
+    private static void startUpStreamCheck() {
+        UpstreamCheck.start();
+        setUpStreamCheckServer();
+        UpstreamCheck.getInstance().addListener(new com.greencloud.gateway.filters.pre.MappingFilter());
+    }
+
+    private static void stopUpStreamCheck() {
+        UpstreamCheck.getInstance().stop();
+    }
+
+    private static void setUpStreamCheckServer() {
+        for (Map.Entry<String, List<String>> entry : serverRef.get().entrySet()) {
+            UpstreamCheck.getInstance().setUpStreamCheckServers(entry.getKey(), entry.getValue());
+        }
     }
 
     private static void buildRoutesTable() {
@@ -104,7 +148,7 @@ public class MappingFilter extends GatewayFilter {
                 continue;
             }
             String[] servers = serverString.split("\\|");
-            serverMap.put(mappingAnt, Arrays.asList(servers));
+            serverMap.put(mappingAnt, Lists.newLinkedList(Arrays.asList(servers)));
 
             String routesConfigString = parts[1];
             if (Strings.isNullOrEmpty(routesConfigString)) {
@@ -125,6 +169,8 @@ public class MappingFilter extends GatewayFilter {
             }
         }
         serverRef.set(serverMap);
+        activeServerRef.set(serverMap);
+
         serverConfigRef.set(serverConfigMap);
 
         routesTableRef.get().clear();
@@ -156,6 +202,9 @@ public class MappingFilter extends GatewayFilter {
         String path = StringUtils.removeStart(uri, contextPath);
 
         List<String> servers = findServers(path);
+        if (servers.isEmpty()) {
+            throw new GatewayException("API Not Found", 400, "API Not Found");
+        }
 
         int index = (int) (Math.random() * servers.size());
         String server = servers.get(index);
@@ -170,7 +219,6 @@ public class MappingFilter extends GatewayFilter {
         }
 
         String routeUrl = server + path + (request.getQueryString() == null ? "" : "?" + request.getQueryString());
-        RequestContext.getCurrentContext().setRouteUrl(routeUrl);
         RequestContext.getCurrentContext().setRouteUrl(routeUrl);
         RequestContext.getCurrentContext().setApp(getApp());
         RequestContext.getCurrentContext().setAPIIdentity(path);
@@ -187,12 +235,12 @@ public class MappingFilter extends GatewayFilter {
         }
 
         boolean match = false;
-        Map<String, List<String>> serverMap = serverRef.get();
+        Map<String, List<String>> serverMap = activeServerRef.get();
         Set<String> mappingAnts = serverMap.keySet();
         for (String mappingAnt : mappingAnts) {
             if (matcher.match(mappingAnt, path)) {
                 match = true;
-                routesTableRef.get().put(path, serverRef.get().get(mappingAnt));
+                routesTableRef.get().put(path, activeServerRef.get().get(mappingAnt));
                 matchers.get().put(path, mappingAnt);
                 break;
             }
@@ -212,4 +260,18 @@ public class MappingFilter extends GatewayFilter {
         return app;
     }
 
+    @Override
+    public void onChange(String serviceGroup, String server, Status status) {
+        List<String> servers = activeServerRef.get().get(serviceGroup);
+
+        if (Status.UP == status) {
+            if (!servers.contains(server)) {
+                servers.add(server);
+            }
+        } else if (Status.DOWN == status) {
+            if (servers.contains(server)) {
+                servers.remove(server);
+            }
+        }
+    }
 }

@@ -110,6 +110,11 @@ public class GatewayConstants {
      */
     public static final String GATEWAY_FLOW_RULE_POLLER_ENABLED = "gateway.flow.rule.poller.enabled";
     public static final String GATEWAY_FLOW_RULE_INTERVAL = "gateway.flow.rule.poller.interval";
+
+    public static final String GATEWAY_UPSTREAM_CHECK_ENABLE = "gateway.upstream.check.enable";
+    public static final String GATEWAY_UPSTREAM_CHECK_CONFIG = "gateway.upstream.check.config";
+
+
     /**
      * Prevent instantiation
      */

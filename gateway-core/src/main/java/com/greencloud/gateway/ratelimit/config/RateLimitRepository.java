@@ -18,4 +18,3 @@ public enum RateLimitRepository {
 		return this.algo;
 	}
 }
-

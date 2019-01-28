@@ -45,14 +45,9 @@ public class UpstreamCheckConfig {
     private CheckTypeEnum type = CheckTypeEnum.HTTP;
 
     /**
-     * upstream servers
-     */
-    private List servers;
-
-    /**
      * 期望的http status 状态码（如匹配，则服务为UP）
      */
-    private int expectStatus;
+    private List<Integer> expectStatus;
 
     /**
      * 期望返回的响应内容（如匹配，则服务为UP）
@@ -99,14 +94,6 @@ public class UpstreamCheckConfig {
         this.type = type;
     }
 
-    public List getServers() {
-        return servers;
-    }
-
-    public void setServers(List servers) {
-        this.servers = servers;
-    }
-
     public String getPath() {
         return path;
     }
@@ -123,11 +110,11 @@ public class UpstreamCheckConfig {
         this.method = method;
     }
 
-    public int getExpectStatus() {
+    public List<Integer> getExpectStatus() {
         return expectStatus;
     }
 
-    public void setExpectStatus(int expectStatus) {
+    public void setExpectStatus(List<Integer> expectStatus) {
         this.expectStatus = expectStatus;
     }
 
