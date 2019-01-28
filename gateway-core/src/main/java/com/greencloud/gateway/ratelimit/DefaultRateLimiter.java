@@ -1,5 +1,6 @@
 package com.greencloud.gateway.ratelimit;
 
+import com.google.common.base.Strings;
 import com.greencloud.gateway.context.RequestContext;
 import com.greencloud.gateway.ratelimit.algorithm.RateLimitAlgo;
 import com.greencloud.gateway.ratelimit.config.RateLimitRepository;
@@ -26,13 +27,17 @@ public class DefaultRateLimiter implements RateLimiter {
 
 		// 根据API查找对应流控规则
 		String api = RequestContext.getCurrentContext().getAPIIdentity();
-		RateLimitRule currentRules = rules.get(api);
-		if (currentRules == null) {
+		if (Strings.isNullOrEmpty(api)) {
+			return;
+		}
+
+		RateLimitRule currentRule = rules.get(api);
+		if (currentRule == null) {
 			return;
 		}
 
 		// 根据流控算法，尝试获取资源
-		getRateLimitAlgo().tryAcquire(currentRules);
+		getRateLimitAlgo().tryAcquire(currentRule);
 
 	}
 
