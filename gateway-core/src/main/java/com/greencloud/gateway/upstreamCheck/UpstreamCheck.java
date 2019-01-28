@@ -73,14 +73,14 @@ public class UpstreamCheck {
                                         // edge trigger
                                         if (count >= config.getRiseCount()) {
                                             tryEraseDownStatus(serviceGroup, serviceGroup);
-                                            updateServiceInstanceStatus(serviceGroup, server, status);
+                                            updateServerInstanceStatus(serviceGroup, server, status);
                                             notifyListener(serviceGroup, server, Status.UP);
                                         }
                                     } else if (status == Status.DOWN) {
                                         // edge trigger
                                         if (count >= config.getFallCount()) {
                                             tryEraseUpStatus(serviceGroup, server);
-                                            updateServiceInstanceStatus(serviceGroup, server, status);
+                                            updateServerInstanceStatus(serviceGroup, server, status);
                                             notifyListener(serviceGroup, server, Status.DOWN);
                                         }
                                     }
@@ -233,8 +233,8 @@ public class UpstreamCheck {
         }
     }
 
-    private void tryEraseStatus(String serviceGroup, String serviceInstance, Status status) {
-        String key = serviceGroup + ":" + serviceInstance + ":" + status.name();
+    private void tryEraseStatus(String serviceGroup, String serverInstance, Status status) {
+        String key = serviceGroup + ":" + serverInstance + ":" + status.name();
         RedisUtil.getInstance().del(key);
     }
 
@@ -248,12 +248,12 @@ public class UpstreamCheck {
         tryEraseStatus(serviceGroup, serverInstance, status);
     }
 
-    private long incrAndGet(String serviceGroup, String serviceInstance, Status status) {
-        String key = serviceGroup + ":" + serviceInstance + ":" + status.name();
+    private long incrAndGet(String serviceGroup, String serverInstance, Status status) {
+        String key = serviceGroup + ":" + serverInstance + ":" + status.name();
         return RedisUtil.getInstance().incr(key);
     }
 
-    private void updateServiceInstanceStatus(String serviceGroup, String serverInstance, Status status) {
+    private void updateServerInstanceStatus(String serviceGroup, String serverInstance, Status status) {
         String key = serviceGroup + ":" + serverInstance;
         RedisUtil.getInstance().set(key, status.name());
     }
