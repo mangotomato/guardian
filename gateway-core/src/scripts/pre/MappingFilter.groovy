@@ -235,12 +235,12 @@ public class MappingFilter extends GatewayFilter implements UpStreamCheckListene
         }
 
         boolean match = false;
-        Map<String, List<String>> serverMap = activeServerRef.get();
+        Map<String, List<String>> serverMap = getServerMap();
         Set<String> mappingAnts = serverMap.keySet();
         for (String mappingAnt : mappingAnts) {
             if (matcher.match(mappingAnt, path)) {
                 match = true;
-                routesTableRef.get().put(path, activeServerRef.get().get(mappingAnt));
+                routesTableRef.get().put(path, getServerMap().get(mappingAnt));
                 matchers.get().put(path, mappingAnt);
                 break;
             }
@@ -251,6 +251,10 @@ public class MappingFilter extends GatewayFilter implements UpStreamCheckListene
         }
 
         return routesTableRef.get().get(path);
+    }
+
+    private Map<String, List<String>> getServerMap() {
+        return UPSTREAM_CHECK_ENABLE.get() ? activeServerRef.get() : serverRef.get();
     }
 
     private String getApp() {
