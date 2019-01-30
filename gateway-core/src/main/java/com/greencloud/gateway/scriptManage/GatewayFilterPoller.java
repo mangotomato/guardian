@@ -50,7 +50,7 @@ public class GatewayFilterPoller {
 
 	private volatile boolean running = true;
 
-	private Thread checherThread = new Thread("GatewayFilterPoller") {
+	private Thread checkerThread = new Thread("GatewayFilterPoller") {
 
 		@Override
 		public void run() {
@@ -131,7 +131,8 @@ public class GatewayFilterPoller {
 	};
 	
 	private GatewayFilterPoller(){
-		this.checherThread.start();
+		this.checkerThread.setDaemon(true);
+		this.checkerThread.start();
 	}
 	
 	public static void start(){

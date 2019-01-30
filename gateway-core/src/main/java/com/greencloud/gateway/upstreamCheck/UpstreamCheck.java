@@ -224,6 +224,7 @@ public class UpstreamCheck {
     }
 
     private void startCheck() {
+        checkThread.setDaemon(true);
         checkThread.start();
     }
 

@@ -65,7 +65,7 @@ public class AsyncGatewayServlet extends HttpServlet {
     }
 
     private void reNewThreadPool() {
-        ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("gateway-pool-%d").build();
+        ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("gateway-pool-%d").setDaemon(true).build();
         ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor(coreSize.get(), maximumSize.get(), aliveTime.get(), TimeUnit.MILLISECONDS, new SynchronousQueue<>(), namedThreadFactory);
         ThreadPoolExecutor old = poolExecutorRef.getAndSet(poolExecutor);
         if (old != null) {
