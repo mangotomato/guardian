@@ -131,10 +131,8 @@ public class GatewayFilterPoller {
 	};
 	
 	private GatewayFilterPoller(){
-
 		this.checherThread.start();
 	}
-	
 	
 	public static void start(){
 		if(instance == null){
