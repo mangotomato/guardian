@@ -6,10 +6,12 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.greencloud.gateway.GatewayCallable;
 import com.greencloud.gateway.GatewayRunner;
 import com.greencloud.gateway.common.CatContext;
+import com.greencloud.gateway.common.datasource.DataSourceHolder;
 import com.greencloud.gateway.constants.GatewayConstants;
 import com.netflix.config.DynamicIntProperty;
 import com.netflix.config.DynamicLongProperty;
 import com.netflix.config.DynamicPropertyFactory;
+import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +77,7 @@ public class AsyncGatewayServlet extends HttpServlet {
 
     private void shutdownPoolExecutor(ThreadPoolExecutor old) {
         try {
-            old.awaitTermination(5, TimeUnit.MINUTES);
+            old.awaitTermination(30, TimeUnit.SECONDS);
             old.shutdown();
         } catch (InterruptedException e) {
             old.shutdownNow();
@@ -108,7 +110,17 @@ public class AsyncGatewayServlet extends HttpServlet {
 
     @Override
     public void destroy() {
+        logger.info("shutdown thread pool started");
         shutdownPoolExecutor(poolExecutorRef.get());
+        logger.info("shutdown thread pool completed");
+        logger.info("shutdown datasource connection pool started");
+        shutdownDatasource();
+        logger.info("shutdown datasource connection pool completed");
+    }
+
+    private void shutdownDatasource() {
+        HikariDataSource dataSource = (HikariDataSource) DataSourceHolder.getInstance().getDataSource();
+        dataSource.close();
     }
 
 }

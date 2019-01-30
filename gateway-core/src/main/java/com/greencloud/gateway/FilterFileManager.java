@@ -37,7 +37,7 @@ public class FilterFileManager {
     /**
      * Initialized the GroovyFileManager.
      *
-     * @param pollingIntervalSeconds the polling interval in Seconds
+     * @param pollingIntervalSeconds the polling interval in Seconds.
      * @param directories            Any number of paths to directories to be polled may be specified
      * @throws IOException
      * @throws IllegalAccessException
