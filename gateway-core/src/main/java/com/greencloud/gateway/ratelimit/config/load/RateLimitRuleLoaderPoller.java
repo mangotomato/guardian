@@ -63,6 +63,7 @@ public class RateLimitRuleLoaderPoller {
     private RateLimitRuleLoaderPoller() {
         dao = new RateLimitRuleDAO();
         loadRateLimitRule();
+        loaderThread.setDaemon(true);
         loaderThread.start();
     }
 
