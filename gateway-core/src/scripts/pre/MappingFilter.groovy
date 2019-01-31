@@ -21,10 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
@@ -39,22 +36,22 @@ public class MappingFilter extends GatewayFilter implements UpStreamCheckListene
     /**
      * /s/** = [http://api.ihotel.cn,http://api.ihotel.cn]
      */
-    private static final AtomicReference<Map<String /* service group */, List<String>>> serverRef = new AtomicReference<>(Maps.newHashMap());
-    private static final AtomicReference<Map<String /* service group */, List<String>>> activeServerRef = new AtomicReference<>(Maps.newHashMap());
+    private static final AtomicReference<HashMap<String /* service group */, List<String>>> serverRef = new AtomicReference<>(Maps.<String, List<String>>newHashMap());
+    private static final AtomicReference<HashMap<String /* service group */, List<String>>> activeServerRef = new AtomicReference<>(Maps.<String, List<String>>newHashMap());
     /**
      * /s/** = [stripPrefix=false,config=configValue]
      */
-    private static final AtomicReference<Map<String, Map<String, String>>> serverConfigRef = new AtomicReference<>(Maps.newHashMap());
+    private static final AtomicReference<HashMap<String, Map<String, String>>> serverConfigRef = new AtomicReference<>(Maps.<String, Map<String, String>>newHashMap());
 
     /**
      * /s/weather = [http://api.ihotel.cn,http://api.ihotel.cn]
      */
-    private static final AtomicReference<Map<String, List<String>>> routesTableRef = new AtomicReference<>(Maps.newHashMap());
+    private static final AtomicReference<HashMap<String, List<String>>> routesTableRef = new AtomicReference<>(Maps.<String, List<String>>newHashMap());
 
     /**
      * /s/weather=/s/**
      */
-    private static final AtomicReference<Map<String, String>> matchers = new AtomicReference<>(Maps.newHashMap());
+    private static final AtomicReference<HashMap<String, String>> matchers = new AtomicReference<>(Maps.<String, String>newHashMap());
 
     private static final DynamicStringProperty ROUTES_TABLE = DynamicPropertyFactory.getInstance()
             .getStringProperty(GatewayConstants.GATEWAY_ROUTES_TABLE, null);
@@ -119,8 +116,8 @@ public class MappingFilter extends GatewayFilter implements UpStreamCheckListene
             return;
         }
 
-        Map<String, List<String>> serverMap = Maps.newHashMap();
-        Map<String, Map<String, String>> serverConfigMap = Maps.newHashMap();
+        HashMap<String, List<String>> serverMap = Maps.newHashMap();
+        HashMap<String, Map<String, String>> serverConfigMap = Maps.newHashMap();
 
         String[] routes = routesTableString.split("\n");
         for (String route : routes) {

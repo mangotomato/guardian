@@ -151,8 +151,9 @@ public class FilterFileManager {
             String sName = file.getAbsolutePath() + file.getName();
             sNames.add(sName);
         }
-        Collection<String> filterNames = FilterLoader.getInstance().getFilterKeys();
-        for (String filterName : filterNames) {
+        Enumeration<String> filterNames = FilterLoader.getInstance().getFilterKeys();
+        while (filterNames.hasMoreElements()) {
+            String filterName = filterNames.nextElement();
             if (!sNames.contains(filterName)) {
                 // remove filter
                 FilterLoader.getInstance().removeFilter(filterName);

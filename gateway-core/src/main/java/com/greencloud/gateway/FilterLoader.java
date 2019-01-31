@@ -86,7 +86,7 @@ public class FilterLoader {
     /**
      * @return all filter keys
      */
-    public Collection<String> getFilterKeys() {
+    public Enumeration<String> getFilterKeys() {
         return filterRegistry.getAllFilterKeys();
     }
 

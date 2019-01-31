@@ -261,7 +261,7 @@ public class RedisUtil {
         });
     }
 
-    public Object scriptLoad(String script) {
+    public Object scriptLoad(final String script) {
         return execute(script, new HashRedisExecutor<Object>() {
             @Override
             public Object execute(Jedis jedis) {

@@ -42,8 +42,8 @@ public class FilterRegistry {
         return this.filters.values();
     }
 
-    public Collection<String> getAllFilterKeys() {
-        return this.filters.keySet();
+    public Enumeration<String> getAllFilterKeys() {
+        return this.filters.keys();
     }
 
 }

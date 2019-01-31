@@ -45,12 +45,12 @@ public class UpstreamCheck {
         @Override
         public void run() {
             while (running) {
-                UpstreamCheckConfig config = configRef.get();
+                final UpstreamCheckConfig config = configRef.get();
                 if (config == null) {
                     return;
                 }
 
-                for (Map.Entry<String, List<String>> entry : servers.entrySet()) {
+                for (final Map.Entry<String, List<String>> entry : servers.entrySet()) {
 
                     poolExecutor.execute(new Runnable() {
 
@@ -208,7 +208,7 @@ public class UpstreamCheck {
     private void initThreadPool() {
         ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("check-pool-%d").build();
         poolExecutor = new ThreadPoolExecutor(0, 10, 0L, TimeUnit.MILLISECONDS,
-                new LinkedBlockingDeque<>(), namedThreadFactory);
+                new LinkedBlockingQueue<Runnable>(), namedThreadFactory);
     }
 
     public void addListener(UpStreamCheckListener listener) {
