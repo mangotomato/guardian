@@ -7,8 +7,6 @@
 We have the requirement for publishing our service to public more urgent as the rapid bussiness explosion. So, Guardian comes up.
 As a API gateway, guardian is a edge service, provide single entry to access backend service. Guardian designed for protecting backend service.
 
-Guardian in chinese name is <code>郁垒神荼</code>[yù lǜ shēn shū].
-
 Guardian has the following features:
 - **API Lifecycle Management**  
 
