@@ -2,6 +2,7 @@ package com.greencloud.gateway.filters.pre
 
 import com.google.common.base.Strings
 import com.greencloud.gateway.GatewayFilter
+import com.greencloud.gateway.common.datasource.DataSourceHolder
 import com.greencloud.gateway.constants.Constants
 import com.greencloud.gateway.constants.HttpHeader
 import com.greencloud.gateway.constants.SystemHeader
@@ -9,11 +10,16 @@ import com.greencloud.gateway.context.RequestContext
 import com.greencloud.gateway.exception.GatewayException
 import com.greencloud.gateway.util.HTTPRequestUtil
 import com.greencloud.gateway.util.MessageDigestUtil
+import com.greencloud.gateway.util.RedisUtil
 import com.greencloud.gateway.util.SignUtil
 import org.apache.commons.io.IOUtils
 import org.apache.commons.lang.StringUtils
 
 import javax.servlet.http.HttpServletRequest
+import javax.sql.DataSource
+import java.sql.Connection
+import java.sql.PreparedStatement
+import java.sql.ResultSet
 
 /**
  * @author leejianhao
@@ -41,7 +47,9 @@ public class AppKeyFilter extends GatewayFilter {
 
         String method = request.getMethod().toUpperCase();
         String path = request.getRequestURI();
-        String secret = getAppSecret();
+
+        String appKey = request.getHeader(SystemHeader.X_GW_KEY);
+        String appSecret = getAppSecret(appKey);
 
         Map<String, String> headers = getHeadersForSign();
         Map<String, String> querys = getQuerysForSign();
@@ -57,7 +65,7 @@ public class AppKeyFilter extends GatewayFilter {
 
         List<String> customSignHeaders = getCustomSignHeaders(request);
 
-        assertSignature(request, secret, method, path, headers, querys, formBodys, customSignHeaders);
+        assertSignature(request, appSecret, method, path, headers, querys, formBodys, customSignHeaders);
 
         // go further
         return null;
@@ -109,7 +117,8 @@ public class AppKeyFilter extends GatewayFilter {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream(), "UTF-8"));
             String formQueryString = IOUtils.toString(reader);
-            Map<String, String> formParams = HTTPRequestUtil.getInstance().leaveFirstIfMultiFormParamValue(formQueryString);
+            Map<String, String> formParams = HTTPRequestUtil.getInstance().leaveFirstIfMultiFormParamValue
+            (formQueryString);
             return formParams;
         } catch (IOException e) {
             e.printStackTrace();
@@ -117,8 +126,58 @@ public class AppKeyFilter extends GatewayFilter {
         return null;
     }
 
-    private String getAppSecret() {
-        return "default";
+    private static final String SQL = "select app_secret from app where app_key = ?";
+
+    private String getAppSecret(String appKey) {
+        String appSecret = "";
+
+        if (Strings.isNullOrEmpty(appKey)) {
+            return appSecret;
+        }
+
+        // from cache
+        String redisKey = Constants.APP_KEY_REDIS_PREFIX + appKey;
+        appSecret = RedisUtil.getInstance().get(redisKey);
+        if (!Strings.isNullOrEmpty(appSecret)) {
+            return appSecret;
+        }
+
+        // from db
+        try {
+            DataSource dataSource = DataSourceHolder.getInstance().getDataSource();
+            Connection connection = dataSource.getConnection();
+
+            PreparedStatement ps = null;
+            ResultSet r = null;
+            try {
+                connection.setAutoCommit(true);
+                ps = connection.prepareStatement(SQL);
+                ps.setString(1, appKey);
+                r = ps.executeQuery();
+
+                appSecret = r.next() ? r.getString(1) : appSecret;
+
+                if (!Strings.isNullOrEmpty(appSecret)) {
+                    RedisUtil.getInstance().set(redisKey, appSecret);
+                }
+
+            } finally {
+                try {
+                    if (r != null) {
+                        r.close();
+                    }
+
+                    if (ps != null) {
+                        ps.close();
+                    }
+                } finally {
+                    connection.close();
+                }
+            }
+        } catch (Exception ignored) {
+        }
+
+        return appSecret;
     }
 
     private List<String> getCustomSignHeaders(HttpServletRequest request) {
@@ -126,7 +185,6 @@ public class AppKeyFilter extends GatewayFilter {
         if (Strings.isNullOrEmpty(signatureHeaderString)) {
             return Collections.emptyList();
         }
-
         String[] signatureHeaders = StringUtils.split(signatureHeaderString, ',');
         return Arrays.asList(signatureHeaders);
     }

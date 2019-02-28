@@ -33,6 +33,7 @@ public class Constants {
     public static final String CAT_PARENT_MESSAGE_ID = "X-CAT-PARENT-ID";
     public static final String CAT_ROOT_MESSAGE_ID = "X-CAT-ROOT-ID";
 
+    public static final String APP_KEY_REDIS_PREFIX = "app_key_";
 
     /**
      * Prevent instantiation
