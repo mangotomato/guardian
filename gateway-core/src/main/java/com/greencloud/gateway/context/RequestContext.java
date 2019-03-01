@@ -273,6 +273,22 @@ public class RequestContext extends ConcurrentHashMap<String, Object> {
         return (String)get("routeUrl");
     }
 
+    public void setAppKeyAuthentification() {
+        set("appKeyAuthentification", true);
+    }
+
+    public boolean getAppKeyAuthentification() {
+        return getBoolean("appKeyAuthentification", false);
+    }
+
+    public void setNonceAuthentification() {
+        set("nonceAuthentification", true);
+    }
+
+    public boolean getNonceAuthentification() {
+        return getBoolean("nonceAuthentification", false);
+    }
+
     public void setAPIIdentity(String identity) {
         set("apiIdentity", identity);
     }

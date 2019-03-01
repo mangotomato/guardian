@@ -32,12 +32,13 @@ public class AppKeyFilter extends GatewayFilter {
 
     @Override
     public int filterOrder() {
-        return 10;
+        return 30;
     }
 
     @Override
     public boolean shouldFilter() {
-        return !RequestContext.getCurrentContext().isHealthCheckRequest();
+        return !RequestContext.getCurrentContext().isHealthCheckRequest() &&
+                RequestContext.getCurrentContext().getAppKeyAuthentification();
     }
 
     @Override

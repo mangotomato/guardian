@@ -39,7 +39,7 @@ public class AppKeyFilter extends GatewayFilter {
 
 	@Override
 	public int filterOrder() {
-		return 10;
+		return 30;
 	}
 
 	@Override

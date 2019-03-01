@@ -215,6 +215,16 @@ public class MappingFilter extends GatewayFilter implements UpStreamCheckListene
             path = StringUtils.removeStart(path, prefix);
         }
 
+        boolean appkeyEnable = "T".equalsIgnoreCase(serverConfigRef.get().get(mappingAnt).get("appkey"));
+        if (appkeyEnable) {
+            RequestContext.getCurrentContext().setAppKeyAuthentification();
+        }
+
+        boolean nonceEnable = "T".equalsIgnoreCase(serverConfigRef.get().get(mappingAnt).get("nonce"));
+        if (nonceEnable) {
+            RequestContext.getCurrentContext().setNonceAuthentification();
+        }
+
         String routeUrl = server + path + (request.getQueryString() == null ? "" : "?" + request.getQueryString());
         RequestContext.getCurrentContext().setRouteUrl(routeUrl);
         RequestContext.getCurrentContext().setApp(getApp());

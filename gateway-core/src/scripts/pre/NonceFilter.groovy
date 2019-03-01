@@ -38,7 +38,7 @@ public class NonceFilter extends GatewayFilter {
 
     @Override
     public int filterOrder() {
-        return 15;
+        return 35;
     }
 
     @Override
@@ -95,7 +95,7 @@ public class NonceFilter extends GatewayFilter {
         String nonce = request.getHeader(SystemHeader.X_GW_NONCE);
 
         return (RA_ENABLE.get() && !Strings.isNullOrEmpty(appKey) && !Strings.isNullOrEmpty(timestamp)
-                && !Strings.isNullOrEmpty(nonce));
+                && !Strings.isNullOrEmpty(nonce)) && RequestContext.getCurrentContext().getNonceAuthentification();
     }
 
 }

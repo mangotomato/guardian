@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class MappingFilter extends GatewayFilter implements UpStreamCheckListener {
 
-    private static Logger logger = LoggerFactory.getLogger(MappingFilter.class);
+    private static Logger logger = LoggerFactory.getLogger(com.greencloud.gateway.filters.pre.MappingFilter.class);
 
     /**
      * /s/** = [http://api.ihotel.cn,http://api.ihotel.cn]
@@ -94,7 +94,7 @@ public class MappingFilter extends GatewayFilter implements UpStreamCheckListene
     private static void startUpStreamCheck() {
         UpstreamCheck.start();
         setUpStreamCheckServer();
-        UpstreamCheck.getInstance().addListener(new MappingFilter());
+        UpstreamCheck.getInstance().addListener(new com.greencloud.gateway.filters.pre.MappingFilter());
     }
 
     private static void stopUpStreamCheck() {
@@ -213,6 +213,16 @@ public class MappingFilter extends GatewayFilter implements UpStreamCheckListene
         if (stripPrefix) {
             String prefix = mappingAnt.substring(0, mappingAnt.indexOf("/*"));
             path = StringUtils.removeStart(path, prefix);
+        }
+
+        boolean appkeyEnable = "T".equalsIgnoreCase(serverConfigRef.get().get(mappingAnt).get("appkey"));
+        if (appkeyEnable) {
+            RequestContext.getCurrentContext().setAppKeyAuthentification();
+        }
+
+        boolean nonceEnable = "T".equalsIgnoreCase(serverConfigRef.get().get(mappingAnt).get("nonce"));
+        if (nonceEnable) {
+            RequestContext.getCurrentContext().setNonceAuthentification();
         }
 
         String routeUrl = server + path + (request.getQueryString() == null ? "" : "?" + request.getQueryString());
