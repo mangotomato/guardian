@@ -235,6 +235,7 @@ public class MappingFilter extends GatewayFilter implements UpStreamCheckListene
     }
 
     private List<String> findServers(String path) throws GatewayException {
+
         List<String> servers = routesTableRef.get().get(path);
 
         if (servers != null && servers.size() > 0) {

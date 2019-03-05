@@ -297,6 +297,15 @@ public class RequestContext extends ConcurrentHashMap<String, Object> {
         return (String)get("apiIdentity");
     }
 
+    public void setBackendServiceTimeout(int timeout) {
+        set("backend-service.timeout", timeout);
+    }
+
+    public int getBackendServiceTimeout() {
+        Object val = get("backend-service.timeout");
+        return val == null ? 0 : (int) val;
+    }
+
     public void setClient(String client) {
         set("client", client);
     }

@@ -152,7 +152,8 @@ public class RoutingFilter extends GatewayFilter {
                 StringUtils.substringBefore(request.getRequestURL().toString(), "?") + "=>" + StringUtils.substringBefore(url, "?"));
 
         try {
-            HttpResponse response = forward(clientRef.get(), method, url, headers, requestEntity, contentLength);
+            RequestConfig requestConfig = buildRequestConfig();
+            HttpResponse response = forward(clientRef.get(), requestConfig, method, url, headers, requestEntity, contentLength);
             Debug.addRequestDebug(String.format("GATEWAY :: %s", url));
             Debug.addRequestDebug(String.format("GATEWAY :: Response statusLine > %s", response.getStatusLine()));
             Debug.addRequestDebug(String.format("GATEWAY :: Response code > %s", response.getStatusLine().getStatusCode()));
@@ -170,29 +171,32 @@ public class RoutingFilter extends GatewayFilter {
         return null;
     }
 
-    public HttpResponse forward(HttpClient client, String method, String url, Header[] headers, InputStream requestEntity, int contentLength)
+    public HttpResponse forward(HttpClient client, RequestConfig requestConfig, String method, String url, Header[] headers, InputStream requestEntity, int contentLength)
             throws Exception {
         HttpUriRequest httpUriRequest;
 
         switch (method) {
             case "POST":
                 HttpPost httpPost = new HttpPost(url);
+                httpPost.setConfig(requestConfig);
                 httpUriRequest = httpPost;
                 InputStreamEntity entity = new InputStreamEntity(requestEntity, contentLength);
                 httpPost.setEntity(entity);
                 break;
             case "PUT":
                 HttpPut httpPut = new HttpPut(url);
+                httpPut.setConfig(requestConfig);
                 httpUriRequest = httpPut;
                 httpPut.setEntity(new InputStreamEntity(requestEntity, contentLength));
                 break;
             case "PATCH":
                 HttpPatch httpPatch = new HttpPatch(url);
+                httpPatch.setConfig(requestConfig);
                 httpUriRequest = httpPatch;
                 httpPatch.setEntity(new InputStreamEntity(requestEntity, contentLength));
                 break;
             default:
-                httpUriRequest = RequestBuilder.create(method).setUri(url).build();
+                httpUriRequest = RequestBuilder.create(method).setUri(url).setConfig(requestConfig).build();
         }
 
         try {
@@ -391,4 +395,14 @@ public class RoutingFilter extends GatewayFilter {
             }
         }
     }
+
+    // 开放平台每个API接口支持设置请求超时时间
+    private RequestConfig buildRequestConfig() {
+        RequestConfig.Builder builder = RequestConfig.custom();
+
+        int timeout = RequestContext.getCurrentContext().getBackendServiceTimeout();
+        builder.setSocketTimeout(timeout == 0 ? SOCKET_TIMEOUT_MILLIS.get() : timeout);
+        return  builder.build();
+    }
+
 }
