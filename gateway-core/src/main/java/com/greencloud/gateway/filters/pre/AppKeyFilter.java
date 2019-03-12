@@ -44,7 +44,8 @@ public class AppKeyFilter extends GatewayFilter {
 
 	@Override
 	public boolean shouldFilter() {
-		return !RequestContext.getCurrentContext().isHealthCheckRequest();
+		return !RequestContext.getCurrentContext().isHealthCheckRequest()
+				&& RequestContext.getCurrentContext().getAppKeyAuthentification();
 	}
 
 	@Override

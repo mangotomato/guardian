@@ -59,6 +59,14 @@ public class MappingFilter extends GatewayFilter implements UpStreamCheckListene
     private static final DynamicBooleanProperty UPSTREAM_CHECK_ENABLE = DynamicPropertyFactory.getInstance()
             .getBooleanProperty(GatewayConstants.GATEWAY_UPSTREAM_CHECK_ENABLE, false);
 
+    private static final DynamicBooleanProperty EUREKA_ENABLE = DynamicPropertyFactory.getInstance()
+            .getBooleanProperty(GatewayConstants.EUREKA_ENABLE, false);
+    private static final DynamicBooleanProperty NACOS_ENABLE = DynamicPropertyFactory.getInstance()
+            .getBooleanProperty(GatewayConstants.NACOS_ENABLE, false);
+    private static final DynamicStringProperty ROUTE_REGISTRY_CENTER = DynamicPropertyFactory.getInstance()
+            .getStringProperty(GatewayConstants.ROUTE_REGISTER_CENTER, "");
+
+
     private static final PathMatcher matcher;
 
     static {
@@ -223,6 +231,13 @@ public class MappingFilter extends GatewayFilter implements UpStreamCheckListene
         boolean nonceEnable = "T".equalsIgnoreCase(serverConfigRef.get().get(mappingAnt).get("nonce"));
         if (nonceEnable) {
             RequestContext.getCurrentContext().setNonceAuthentification();
+        }
+
+        boolean usingEureka = ("eureka".equalsIgnoreCase(ROUTE_REGISTRY_CENTER.get()) && EUREKA_ENABLE.get());
+
+        if (usingEureka) {
+            // Example: http://base-service/s/weather?city=杭州 base-service为服务名
+            server = "http://" + server;
         }
 
         String routeUrl = server + path + (request.getQueryString() == null ? "" : "?" + request.getQueryString());

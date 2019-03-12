@@ -114,6 +114,17 @@ public class GatewayConstants {
     public static final String GATEWAY_UPSTREAM_CHECK_ENABLE = "gateway.upstream.check.enable";
     public static final String GATEWAY_UPSTREAM_CHECK_CONFIG = "gateway.upstream.check.config";
 
+    public static final String EUREKA_ENABLE = "eureka.enabled";
+    public static final String NACOS_ENABLE = "nacos.enabled";
+
+    /**
+     * 注册中心
+     */
+    public static final String ROUTE_REGISTER_CENTER = "route.register.center";
+    /**
+     * 服务名
+     */
+    public static final String ROUTE_REGISTER_CENTER_SERVICE_NAME = "route.register.center.service.name";
 
     /**
      * Prevent instantiation
