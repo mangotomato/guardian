@@ -59,6 +59,13 @@ public class MappingFilter extends GatewayFilter implements UpStreamCheckListene
     private static final DynamicBooleanProperty UPSTREAM_CHECK_ENABLE = DynamicPropertyFactory.getInstance()
             .getBooleanProperty(GatewayConstants.GATEWAY_UPSTREAM_CHECK_ENABLE, false);
 
+    private static final DynamicBooleanProperty EUREKA_ENABLE = DynamicPropertyFactory.getInstance()
+            .getBooleanProperty(GatewayConstants.EUREKA_ENABLE, false);
+    private static final DynamicBooleanProperty NACOS_ENABLE = DynamicPropertyFactory.getInstance()
+            .getBooleanProperty(GatewayConstants.NACOS_ENABLE, false);
+    private static final DynamicStringProperty ROUTE_REGISTRY_CENTER = DynamicPropertyFactory.getInstance()
+            .getStringProperty(GatewayConstants.ROUTE_REGISTER_CENTER, "");
+
     private static final PathMatcher matcher;
 
     static {
@@ -225,7 +232,17 @@ public class MappingFilter extends GatewayFilter implements UpStreamCheckListene
             RequestContext.getCurrentContext().setNonceAuthentification();
         }
 
-        String routeUrl = server + path + (request.getQueryString() == null ? "" : "?" + request.getQueryString());
+        boolean usingEureka = ("eureka".equalsIgnoreCase(ROUTE_REGISTRY_CENTER.get()) && EUREKA_ENABLE.get());
+
+        String routeUrl;
+
+        if (usingEureka) {
+            RequestContext.getCurrentContext().set(GatewayConstants.ROUTE_REGISTER_CENTER_SERVICE_NAME, server);
+            routeUrl = path + (request.getQueryString() == null ? "" : "?" + request.getQueryString());
+        } else {
+            routeUrl = server + path + (request.getQueryString() == null ? "" : "?" + request.getQueryString());
+        }
+
         RequestContext.getCurrentContext().setRouteUrl(routeUrl);
         RequestContext.getCurrentContext().setApp(getApp());
         RequestContext.getCurrentContext().setAPIIdentity(path);

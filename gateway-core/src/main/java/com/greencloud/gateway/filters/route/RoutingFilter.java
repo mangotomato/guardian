@@ -2,6 +2,7 @@ package com.greencloud.gateway.filters.route;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Transaction;
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.greencloud.gateway.GatewayFilter;
 import com.greencloud.gateway.common.CatContext;
@@ -11,8 +12,10 @@ import com.greencloud.gateway.context.Debug;
 import com.greencloud.gateway.context.RequestContext;
 import com.greencloud.gateway.exception.GatewayException;
 import com.greencloud.gateway.util.HTTPRequestUtil;
+import com.netflix.config.DynamicBooleanProperty;
 import com.netflix.config.DynamicIntProperty;
 import com.netflix.config.DynamicPropertyFactory;
+import com.netflix.config.DynamicStringProperty;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.*;
@@ -77,6 +80,10 @@ public class RoutingFilter extends GatewayFilter {
     private static final DynamicIntProperty SOCKET_TIMEOUT_MILLIS = DynamicPropertyFactory.getInstance().getIntProperty(GatewayConstants.GATEWAY_CLIENT_SOCKET_TIMEOUT_MILLIS, 20000);
     private static final DynamicIntProperty CONNECTION_TIMEOUT_MILLIS = DynamicPropertyFactory.getInstance().getIntProperty(GatewayConstants.GATEWAY_CLIENT_CONNECT_TIMEOUT_MILLIS, 20000);
 
+    private static final DynamicBooleanProperty EUREKA_ENABLE = DynamicPropertyFactory.getInstance().getBooleanProperty(GatewayConstants.EUREKA_ENABLE, false);
+    private static final DynamicBooleanProperty NACOS_ENABLE = DynamicPropertyFactory.getInstance().getBooleanProperty(GatewayConstants.NACOS_ENABLE, false);
+    private static final DynamicStringProperty ROUTE_REGISTRY_CENTER = DynamicPropertyFactory.getInstance().getStringProperty(GatewayConstants.ROUTE_REGISTER_CENTER, "");
+
     private static final AtomicReference<CloseableHttpClient> clientRef = new AtomicReference<>(newClient());
 
     private static final ScheduledExecutorService schedule = new ScheduledThreadPoolExecutor(1, new DefaultThreadFactory("RoutingFilter.connectionManagerTimer", true));
@@ -133,6 +140,11 @@ public class RoutingFilter extends GatewayFilter {
     @Override
     public boolean shouldFilter() {
         RequestContext ctx = RequestContext.getCurrentContext();
+
+        // 如果走服务注册中心
+        if (!Strings.isNullOrEmpty(ROUTE_REGISTRY_CENTER.get()) && (EUREKA_ENABLE.get() || NACOS_ENABLE.get())) {
+            return false;
+        }
         return ctx.getRouteUrl() != null && ctx.sendGatewayResponse();
     }
 

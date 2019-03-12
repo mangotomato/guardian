@@ -130,7 +130,7 @@ public class StartServer implements ServletContextListener {
     }
 
     private void updateInstanceStatusToEureka() {
-        DynamicBooleanProperty eurekaEnabled = DynamicPropertyFactory.getInstance().getBooleanProperty("eureka.enabled", true);
+        DynamicBooleanProperty eurekaEnabled = DynamicPropertyFactory.getInstance().getBooleanProperty(GatewayConstants.EUREKA_ENABLE, true);
         if (!eurekaEnabled.get()) {
             return;
         }
@@ -168,7 +168,6 @@ public class StartServer implements ServletContextListener {
             @Override
             public String getHostName(boolean refresh) {
                 try {
-
                     return InetAddress.getLocalHost().getHostAddress();
                 } catch (UnknownHostException e) {
                     return super.getHostName(refresh);

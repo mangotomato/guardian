@@ -61,6 +61,7 @@
         <sentinel.version>1.4.0</sentinel.version>
         <junit.version>4.12</junit.version>
         <jedis.version>2.9.0</jedis.version>
+        <ribbon-version>0.3.13</ribbon-version>
     </properties>
 
     <dependencies>
@@ -201,6 +202,21 @@
                 <groupId>commons-fileupload</groupId>
                 <artifactId>commons-fileupload</artifactId>
                 <version>${commons-fileupload.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.ribbon</groupId>
+                <artifactId>ribbon-eureka</artifactId>
+                <version>${ribbon-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.ribbon</groupId>
+                <artifactId>ribbon-httpclient</artifactId>
+                <version>${ribbon-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.ribbon</groupId>
+                <artifactId>ribbon-core</artifactId>
+                <version>${ribbon-version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
