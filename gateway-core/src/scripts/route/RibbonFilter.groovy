@@ -36,7 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author leejianhao
+ * @author wyp,leejianhao
  */
 public class RibbonFilter extends GatewayFilter {
 
