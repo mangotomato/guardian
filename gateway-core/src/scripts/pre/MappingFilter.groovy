@@ -35,9 +35,15 @@ public class MappingFilter extends GatewayFilter implements UpStreamCheckListene
 
     /**
      * /s/** = [http://api.ihotel.cn,http://api.ihotel.cn]
+     * /s/** = SERVICE-NAME
      */
     private static final AtomicReference<HashMap<String /* service group */, List<String>>> serverRef = new AtomicReference<>(Maps.<String, List<String>>newHashMap());
+
+    /**
+     * Activated when the upstream check enabled
+     */
     private static final AtomicReference<HashMap<String /* service group */, List<String>>> activeServerRef = new AtomicReference<>(Maps.<String, List<String>>newHashMap());
+
     /**
      * /s/** = [stripPrefix=false,config=configValue]
      */
@@ -53,16 +59,33 @@ public class MappingFilter extends GatewayFilter implements UpStreamCheckListene
      */
     private static final AtomicReference<HashMap<String, String>> matchers = new AtomicReference<>(Maps.<String, String>newHashMap());
 
+    /**
+     * Routing table
+     */
     private static final DynamicStringProperty ROUTES_TABLE = DynamicPropertyFactory.getInstance()
             .getStringProperty(GatewayConstants.GATEWAY_ROUTES_TABLE, null);
 
+    /**
+     * Upstream check
+     */
     private static final DynamicBooleanProperty UPSTREAM_CHECK_ENABLE = DynamicPropertyFactory.getInstance()
             .getBooleanProperty(GatewayConstants.GATEWAY_UPSTREAM_CHECK_ENABLE, false);
 
+    /**
+     * Eureka enalbed, guardian discover service instances by eureka
+     */
     private static final DynamicBooleanProperty EUREKA_ENABLE = DynamicPropertyFactory.getInstance()
             .getBooleanProperty(GatewayConstants.EUREKA_ENABLE, false);
+
+    /**
+     * Nacos enabled, guardian discover service instance by nacos
+     */
     private static final DynamicBooleanProperty NACOS_ENABLE = DynamicPropertyFactory.getInstance()
             .getBooleanProperty(GatewayConstants.NACOS_ENABLE, false);
+
+    /**
+     * Service registry(eureka,zookeeper,nacos etc)
+     */
     private static final DynamicStringProperty ROUTE_REGISTRY_CENTER = DynamicPropertyFactory.getInstance()
             .getStringProperty(GatewayConstants.ROUTE_REGISTER_CENTER, "");
 

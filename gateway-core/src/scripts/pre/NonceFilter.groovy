@@ -23,7 +23,7 @@ public class NonceFilter extends GatewayFilter {
     private static final DynamicIntProperty TIMESTAMP_VALIDITY_MINUTES = DynamicPropertyFactory.getInstance()
             .getIntProperty(GatewayConstants.GATEWAY_NONCE_TIMESTAMP_VALIDITY_MINUTES, 15);
 
-    private static final DynamicBooleanProperty RA_ENABLE = DynamicPropertyFactory.getInstance()
+    private static final DynamicBooleanProperty NONCE_ENABLE = DynamicPropertyFactory.getInstance()
             .getBooleanProperty(GatewayConstants.GATEWAY_NONCE_ENABLE, false);
 
     /**
@@ -94,8 +94,8 @@ public class NonceFilter extends GatewayFilter {
         String timestamp = request.getHeader(SystemHeader.X_GW_TIMESTAMP);
         String nonce = request.getHeader(SystemHeader.X_GW_NONCE);
 
-        return (RA_ENABLE.get() && !Strings.isNullOrEmpty(appKey) && !Strings.isNullOrEmpty(timestamp)
-                && !Strings.isNullOrEmpty(nonce)) && RequestContext.getCurrentContext().getNonceAuthentification();
+        return (NONCE_ENABLE.get() && !Strings.isNullOrEmpty(appKey) && !Strings.isNullOrEmpty(timestamp)
+                && !Strings.isNullOrEmpty(nonce) && RequestContext.getCurrentContext().getNonceAuthentification());
     }
 
 }
