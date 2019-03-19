@@ -57,10 +57,10 @@ See the [中文文档](https://github.com/mangotomato/guardian/wiki/Guardian%E4%
 
 ## Overall structure
 
-- **Open platform gateway**  
+1. Open platform gateway  
 <img src="https://github.com/mangotomato/uploads/blob/master/architecturev1.0.png" alt="Open-platform gateway">
 
-- **Microservice gateway**  
+2. Microservice gateway  
 <img src="https://github.com/mangotomato/uploads/blob/master/microservice-gateway.png" alt="Microservice gateway">
 
 ## Design
