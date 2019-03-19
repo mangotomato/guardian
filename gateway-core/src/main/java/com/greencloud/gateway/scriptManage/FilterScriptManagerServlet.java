@@ -133,7 +133,7 @@ public class FilterScriptManagerServlet extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         if (!adminEnabled.get()) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Filter admin is disabled. See the zuul.filters.admin.enabled FastProperty.");
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Filter admin is disabled. See the gateway.filters.admin.enabled FastProperty.");
             return;
         }
 

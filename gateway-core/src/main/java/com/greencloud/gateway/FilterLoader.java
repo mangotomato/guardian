@@ -41,7 +41,7 @@ public class FilterLoader {
 //        filterRegistry.put("sentinelFilter", new SentinelFilter());
 //        filterRegistry.put("appKeyFilter", new AppKeyFilter());
 //        filterRegistry.put("nonceFilter", new NonceFilter());
-        filterRegistry.put("flowFilter", new FlowFilter());
+//        filterRegistry.put("flowFilter", new FlowFilter());
     }
 
     /**
