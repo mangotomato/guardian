@@ -85,6 +85,12 @@ public class AsyncGatewayServlet extends HttpServlet {
         }
     }
 
+    private void shutdownPoolExecutorNow() {
+        if (poolExecutorRef.get() != null) {
+            poolExecutorRef.get().shutdownNow();
+        }
+    }
+
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Transaction t = Cat.newTransaction("AsyncGatewayServlet", req.getRequestURL().toString());
@@ -111,7 +117,7 @@ public class AsyncGatewayServlet extends HttpServlet {
     @Override
     public void destroy() {
         logger.info("shutdown thread pool started");
-        shutdownPoolExecutor(poolExecutorRef.get());
+        shutdownPoolExecutorNow();
         logger.info("shutdown thread pool completed");
         logger.info("shutdown datasource connection pool started");
         shutdownDatasource();
